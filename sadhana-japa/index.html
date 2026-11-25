@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1530">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Sadhana Japa</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" href="icon.svg">
+<style>
+:root{--bg:#0b1530;--bg2:#12204a;--card:#16275a;--line:#24366e;--text:#eef1fb;--mute:#9aa6cc;--saf:#f4a340;--saf2:#ffcf7a;--gold:#e7c26a;--gold-bg:rgba(231,194,106,.22);--part:rgba(154,166,204,.18)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.wrap{max-width:560px;margin:0 auto;padding:12px 14px}
+header{display:flex;justify-content:space-between;align-items:baseline;padding:4px 2px 8px}
+header h1{font-size:18px;margin:0;color:var(--saf2);font-weight:600;letter-spacing:.3px}
+header .d{color:var(--mute);font-size:14px}
+.banner{background:linear-gradient(90deg,rgba(244,163,64,.18),rgba(244,163,64,.06));border:1px solid rgba(244,163,64,.35);border-radius:14px;padding:10px 12px;margin-bottom:10px;font-size:15px}
+.banner b{color:var(--saf2)}
+.note{color:var(--saf2);font-size:14px;text-align:center;margin:4px 0}
+.top{display:flex;align-items:center;gap:14px;margin:6px 0 10px}
+.ring{position:relative;width:118px;height:118px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .v b{font-size:30px;line-height:1}
+.ring .v span{color:var(--mute);font-size:13px}
+.next{flex:1;font-size:15px}
+.next .lbl{color:var(--mute);font-size:13px}
+.next .what{color:var(--text);font-weight:600}
+.pad{user-select:none;-webkit-user-select:none;touch-action:manipulation;min-height:40vh;border-radius:22px;background:radial-gradient(circle at 50% 40%,#1d3270,#12204a 70%);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:background .08s}
+.pad:active,.pad.hit{background:radial-gradient(circle at 50% 40%,#284189,#152657 70%)}
+.pad .beads{font-size:64px;font-weight:300;line-height:1;font-variant-numeric:tabular-nums}
+.pad .beads small{font-size:24px;color:var(--mute)}
+.pad .sub{color:var(--mute);margin-top:10px;font-size:15px}
+.pad .hint{color:var(--mute);opacity:.6;font-size:12px;margin-top:6px}
+.pad.flash{box-shadow:0 0 0 3px var(--saf) inset}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin:10px 0}
+.step{display:flex;align-items:center;gap:8px}
+.step button{width:52px;height:52px;border-radius:14px;border:1px solid var(--line);background:var(--bg2);font-size:26px}
+.step .n{min-width:34px;text-align:center;font-size:22px;font-variant-numeric:tabular-nums}
+.small{font-size:13px;color:var(--mute)}
+.btn{border:1px solid var(--line);background:var(--bg2);border-radius:12px;padding:10px 14px;min-height:44px}
+.btn.s{padding:6px 10px;min-height:36px;font-size:14px}
+.btn.p{background:var(--saf);border-color:var(--saf);color:#1b1205;font-weight:600}
+.btn.warn{border-color:#6e3a3a;color:#f2b8b8}
+.chk{display:flex;align-items:center;gap:12px;font-size:17px;min-height:44px}
+.chk input{width:26px;height:26px;accent-color:var(--saf)}
+input[type=text],input[type=number],input[type=date],input[type=time],select,textarea{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:9px 10px;min-height:42px;width:100%}
+textarea{color:var(--text);font:13px monospace;min-height:110px}
+label.f{display:block;margin:8px 0}
+label.f span{display:block;font-size:13px;color:var(--mute);margin-bottom:3px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg{display:flex;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:none;border-radius:9px;padding:9px 4px;min-height:42px;font-size:14px}
+.seg button.on{background:var(--saf);color:#1b1205;font-weight:600}
+.blk{display:flex;gap:12px;padding:12px 10px;border-radius:12px;border:1px solid transparent}
+.blk .t{width:150px;flex:none;white-space:nowrap;font-size:14px;color:var(--mute);font-variant-numeric:tabular-nums}
+.blk.now{border-color:var(--saf);background:rgba(244,163,64,.12)}
+.blk.next{border-color:var(--line);background:rgba(255,255,255,.03)}
+.blk .tag{font-size:12px;color:var(--saf2);margin-left:6px}
+.hol{display:flex;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line)}
+.hol .dt{width:86px;flex:none;color:var(--saf2);font-size:14px}
+.hol .nm{font-weight:600}
+.hol .ek{color:var(--saf)}
+.mh{color:var(--mute);font-size:13px;margin:14px 0 2px;text-transform:uppercase;letter-spacing:.6px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .h{text-align:center;font-size:12px;color:var(--mute)}
+.cal .c{aspect-ratio:1/1.05;border-radius:10px;background:rgba(255,255,255,.03);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;border:1px solid transparent;padding:0}
+.cal .c .dn{font-size:11px;color:var(--mute)}
+.cal .c .r{font-size:13px;font-variant-numeric:tabular-nums}
+.cal .c.full{background:var(--gold-bg);border-color:rgba(231,194,106,.4)}
+.cal .c.full .r{color:var(--gold)}
+.cal .c.part{background:var(--part)}
+.cal .c.today{border-color:var(--saf)}
+.cal .c.empty{background:none}
+nav{position:fixed;left:0;right:0;bottom:0;background:#0a1228;border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
+nav .in{display:flex;max-width:560px;width:100%}
+nav button{flex:1;background:none;border:0;padding:10px 2px 12px;color:var(--mute);font-size:12px;min-height:60px}
+nav button i{display:block;font-style:normal;font-size:20px;margin-bottom:2px}
+nav button.on{color:var(--saf2)}
+dialog{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:18px;width:min(92vw,440px);padding:16px}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#24366e;color:var(--text);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+.blkedit{display:grid;grid-template-columns:1.6fr 1fr 1fr auto;gap:6px;margin:6px 0;align-items:center}
+.blkedit input{min-height:38px;padding:6px}
+footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-size:15px;letter-spacing:.5px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>Sadhana Japa</h1><span class="d" id="hdrDate"></span></header>
+
+  <section id="v-japa">
+    <div id="holyBanner" class="banner hide"></div>
+    <div id="makeup" class="note hide"></div>
+    <div class="top">
+      <div class="ring">
+        <svg width="118" height="118" viewBox="0 0 118 118"><circle cx="59" cy="59" r="50" fill="none" stroke="#24366e" stroke-width="10"/><circle id="ringArc" cx="59" cy="59" r="50" fill="none" stroke="#f4a340" stroke-width="10" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"/></svg>
+        <div class="v"><b id="totNum">0</b><span id="totOf">of 16 rounds</span></div>
+      </div>
+      <div class="next" id="nextBox"></div>
+    </div>
+    <div class="pad" id="pad" role="button" aria-label="Tap to count one bead">
+      <div class="beads"><span id="beadNum">0</span><small> / 108</small></div>
+      <div class="sub" id="padSub">Counter 0 · 0 rounds</div>
+      <div class="hint">Tap anywhere here for each bead</div>
+    </div>
+    <div class="row">
+      <button class="btn s" id="undo" aria-label="Undo one bead">↶ −1 bead</button>
+      <div class="step"><span class="small">Morning<br>bead rounds</span><button id="mMinus" aria-label="Minus one morning round">−</button><span class="n" id="mNum">0</span><button id="mPlus" aria-label="Plus one morning round">+</button></div>
+    </div>
+    <div class="card">
+      <label class="chk"><input type="checkbox" id="gitaChk"> Gita study today</label>
+      <div class="row" style="margin:6px 0 0"><input type="text" id="bookmark" inputmode="decimal" placeholder="Chapter.verse, e.g. 2.47" style="flex:1"><button class="btn s" id="bmSave">Save</button></div>
+      <div class="small" id="lastRead" style="margin-top:6px"></div>
+    </div>
+    <div style="text-align:center"><button class="btn s" id="editToday">Edit today’s numbers</button></div>
+  </section>
+
+  <section id="v-plan" class="hide">
+    <div class="card">
+      <div class="small" style="margin-bottom:6px">Today’s plan</div>
+      <div class="seg" id="typeSeg"></div>
+      <div class="small" id="typeNote" style="margin-top:6px"></div>
+    </div>
+    <div id="planList"></div>
+    <div class="small" style="margin:10px 4px">Times can be changed in Settings.</div>
+  </section>
+
+  <section id="v-holy" class="hide">
+    <div id="holyNext" class="banner hide"></div>
+    <div id="holyList"></div>
+    <div class="small" style="margin:12px 4px">Dates: ISKCON Vaisnava calendar (GCal) via vaisnavacalendar.info, Dallas location, which shares Lubbock’s time zone. Break-fast windows use Lubbock sunrise and stay inside the Dallas window. Add or edit dates in Settings.</div>
+  </section>
+
+  <section id="v-hist" class="hide">
+    <div class="card" id="streakBox"></div>
+    <div class="row"><button class="btn s" id="calPrev">‹</button><b id="calTitle"></b><button class="btn s" id="calNext">›</button></div>
+    <div class="cal" id="cal"></div>
+    <div class="small" id="calSum" style="margin-top:8px"></div>
+    <div class="small" style="margin-top:4px">Tap a day to correct it.</div>
+  </section>
+
+  <section id="v-set" class="hide">
+    <div class="card">
+      <b>Japa</b>
+      <label class="f"><span>Daily rounds (base target)</span><input type="number" id="sBase" min="1" max="64"></label>
+      <label class="chk"><input type="checkbox" id="sVibBead"> Short buzz on every bead</label>
+      <label class="chk"><input type="checkbox" id="sVibRound"> Longer buzz at each round</label>
+      <label class="chk"><input type="checkbox" id="sWake"> Keep screen on while counting</label>
+    </div>
+    <div class="card">
+      <b>Daily plans</b>
+      <div class="seg" id="planEditSeg" style="margin:8px 0"></div>
+      <div class="small">Label · start · end (end optional)</div>
+      <div id="planEdit"></div>
+      <div class="row"><button class="btn s" id="addBlock">+ Add block</button><button class="btn s" id="resetPlans">Restore default times</button></div>
+    </div>
+    <div class="card">
+      <b>Holy days</b>
+      <div class="grid2">
+        <label class="f"><span>Date</span><input type="date" id="hDate"></label>
+        <label class="f"><span>Type</span><select id="hType"><option value="ekadashi">Ekadashi</option><option value="festival">Festival</option></select></label>
+      </div>
+      <label class="f"><span>Name</span><input type="text" id="hName" placeholder="e.g. Utpanna Ekadasi"></label>
+      <div class="grid2">
+        <label class="f"><span>Break-fast date</span><input type="date" id="hBreak"></label>
+        <label class="f"><span>Note</span><input type="text" id="hNote" placeholder="e.g. Fast till noon"></label>
+        <label class="f"><span>Break fast from</span><input type="time" id="hFrom"></label>
+        <label class="f"><span>Break fast until</span><input type="time" id="hTo"></label>
+      </div>
+      <div class="row"><button class="btn p" id="hSave">Save date</button><button class="btn s" id="hClear">Clear form</button></div>
+      <div id="holyEdit" style="max-height:320px;overflow:auto"></div>
+      <div class="row"><button class="btn s" id="hRestore">Restore bundled dates</button></div>
+    </div>
+    <div class="card">
+      <b>Backup</b>
+      <div class="row"><button class="btn" id="expBtn">Export backup file</button><button class="btn" id="expCopy">Copy JSON</button></div>
+      <label class="f"><span>Import: paste backup JSON or pick a file</span><textarea id="impText"></textarea></label>
+      <div class="row"><input type="file" id="impFile" accept=".json,application/json" style="flex:1;min-width:0"><button class="btn" id="impBtn">Import</button></div>
+    </div>
+    <div class="card">
+      <b>Counter</b>
+      <p class="small">Resetting sets today’s bead counter to 0. Morning rounds and history stay.</p>
+      <button class="btn warn" id="resetCounter">Reset today’s counter…</button>
+    </div>
+  </section>
+
+  <footer>Hare Krishna</footer>
+</div>
+
+<nav><div class="in">
+  <button data-v="japa" class="on"><i>📿</i>Japa</button>
+  <button data-v="plan"><i>🕰️</i>Plan</button>
+  <button data-v="holy"><i>🪔</i>Holy days</button>
+  <button data-v="hist"><i>🌼</i>History</button>
+  <button data-v="set"><i>⚙️</i>Settings</button>
+</div></nav>
+
+<dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
+<div class="toast" id="toast"></div>
+
+<script>
+/* Sadhana Japa core logic: pure functions, testable in node */
+var SL = (function () {
+  var BEADS = 108;
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function dateKey(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function keyToUTC(k) { var p = k.split('-'); return Date.UTC(+p[0], +p[1] - 1, +p[2]); }
+  function daysBetween(a, b) { return Math.round((keyToUTC(b) - keyToUTC(a)) / 86400000); }
+  function addDays(k, n) { var d = new Date(keyToUTC(k) + n * 86400000); return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()); }
+  function weekday(k) { return new Date(keyToUTC(k)).getUTCDay(); } // 0=Sun
+  function roundsFromCounter(c) { return Math.floor(Math.max(0, c) / BEADS); }
+  function beadsInRound(c) { return Math.max(0, c) % BEADS; }
+  function totalRounds(day) { return (day.morning || 0) + roundsFromCounter(day.counter || 0); }
+  // Shortfall carries to the next day only, capped at one day's base quota.
+  function computeCarry(prevTarget, prevTotal, base) {
+    var s = Math.max(0, (prevTarget || 0) - (prevTotal || 0));
+    return Math.min(s, base);
+  }
+  function newDay(date, base, carry) {
+    return { date: date, counter: 0, morning: 0, carry: carry || 0, target: base + (carry || 0), gita: false };
+  }
+  function blankState(today) {
+    return {
+      version: 1,
+      settings: { baseTarget: 16, vibBead: false, vibRound: true, wakeLock: true, plans: defaultPlans(), dayTypes: { '2026-11-25': 'late', '2026-11-26': 'weekend', '2026-11-27': 'late' } },
+      today: newDay(today, 16, 0),
+      history: {},
+      bookmark: '',
+      holy: null
+    };
+  }
+  // Roll the day over if the calendar date changed. Returns true if it rolled.
+  function rollover(state, todayKey) {
+    var t = state.today, base = state.settings.baseTarget;
+    if (!t || t.date === todayKey) return false;
+    if (daysBetween(t.date, todayKey) < 0) return false; // clock went backwards: leave data alone
+    var total = totalRounds(t);
+    state.history[t.date] = { rounds: total, target: t.target, gita: !!t.gita, morning: t.morning, counter: t.counter };
+    var gap = daysBetween(t.date, todayKey);
+    var carry = gap === 1 ? computeCarry(t.target, total, base) : 0; // never more than one day back
+    state.today = newDay(todayKey, base, carry);
+    return true;
+  }
+  function isComplete(h) { return h && h.target > 0 && h.rounds >= h.target; }
+  // Consecutive complete days ending today (if complete) or yesterday.
+  function streak(history, today) {
+    var n = 0, k = today && isComplete({ rounds: totalRounds(today), target: today.target }) ? today.date : null;
+    var cur = today ? addDays(today.date, -1) : null;
+    if (k) n = 1;
+    while (cur && isComplete(history[cur])) { n++; cur = addDays(cur, -1); }
+    return n;
+  }
+  function defaultPlans() {
+    var eve = [
+      { label: '5 evening rounds', start: '20:30', end: '21:20', kind: 'rounds' },
+      { label: 'Bhagavad Gita study', start: '21:25', end: '21:40', kind: 'study' },
+      { label: 'Bed', start: '22:00', end: '', kind: 'bed' }
+    ];
+    function c(a) { return a.map(function (b) { return { label: b.label, start: b.start, end: b.end, kind: b.kind }; }); }
+    return {
+      weekday: [{ label: 'Wake', start: '04:25', end: '', kind: 'wake' }, { label: '8 morning rounds', start: '04:50', end: '06:10', kind: 'rounds' }, { label: '3 lunch rounds', start: '15:30', end: '', kind: 'rounds' }].concat(c(eve)),
+      late: [{ label: 'Wake', start: '05:10', end: '', kind: 'wake' }, { label: 'Morning rounds', start: '05:35', end: '07:25', kind: 'rounds' }, { label: '3 lunch rounds', start: '13:00', end: '', kind: 'rounds' }].concat(c(eve)),
+      weekend: [{ label: 'Wake', start: '05:55', end: '', kind: 'wake' }, { label: '8 morning rounds', start: '06:20', end: '07:40', kind: 'rounds' }].concat(c(eve))
+    };
+  }
+  function dayType(key, overrides) {
+    if (overrides && overrides[key]) return overrides[key];
+    var w = weekday(key);
+    return (w === 0 || w === 6) ? 'weekend' : 'weekday';
+  }
+  function toMin(hhmm) { if (!hhmm) return null; var p = hhmm.split(':'); return +p[0] * 60 + +p[1]; }
+  function fmt12(hhmm) {
+    if (!hhmm) return '';
+    var m = toMin(hhmm), h = Math.floor(m / 60), mm = m % 60, ap = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12; return h + ':' + pad(mm) + ' ' + ap;
+  }
+  // Index of the current block, or the next upcoming one; -1 if the day is done.
+  function blockStatus(plan, nowMin) {
+    var sorted = plan.map(function (b, i) { return { b: b, i: i, s: toMin(b.start), e: toMin(b.end) }; }).sort(function (a, b) { return a.s - b.s; });
+    for (var j = 0; j < sorted.length; j++) {
+      var x = sorted[j], end = x.e != null ? x.e : x.s + 15;
+      if (nowMin >= x.s && nowMin < end) return { index: x.i, state: 'now' };
+      if (nowMin < x.s) return { index: x.i, state: 'next' };
+    }
+    return { index: -1, state: 'done' };
+  }
+  function nextHoly(list, todayKey) {
+    var items = (list || []).slice().sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+    var res = [];
+    for (var i = 0; i < items.length; i++) {
+      var e = items[i];
+      if (e.breakDate === todayKey) res.push({ e: e, kind: 'break', days: 0 });
+      else if (e.date >= todayKey) res.push({ e: e, kind: 'fast', days: daysBetween(todayKey, e.date) });
+    }
+    res.sort(function (a, b) { return a.days - b.days || (a.kind === 'break' ? -1 : 1); });
+    return res;
+  }
+  function seedHistory() {
+    var h = {}, d = [['2026-11-17', 10, 14], ['2026-11-18', 16, 16], ['2026-11-19', 16, 16], ['2026-11-20', 16, 16], ['2026-11-21', 16, 16], ['2026-11-22', 10, 16], ['2026-11-23', 22, 22], ['2026-11-24', 16, 16]];
+    d.forEach(function (r) { h[r[0]] = { rounds: r[1], target: r[2] }; });
+    return h;
+  }
+  function validImport(o) { return o && typeof o === 'object' && o.today && o.settings && o.history && typeof o.today.date === 'string'; }
+  return { BEADS: BEADS, dateKey: dateKey, addDays: addDays, daysBetween: daysBetween, weekday: weekday, roundsFromCounter: roundsFromCounter, beadsInRound: beadsInRound, totalRounds: totalRounds, computeCarry: computeCarry, newDay: newDay, blankState: blankState, rollover: rollover, isComplete: isComplete, streak: streak, defaultPlans: defaultPlans, dayType: dayType, toMin: toMin, fmt12: fmt12, blockStatus: blockStatus, nextHoly: nextHoly, seedHistory: seedHistory, validImport: validImport };
+})();
+if (typeof module !== 'undefined') module.exports = SL;
+
+const BUNDLED_HOLY = [{"type":"ekadashi","name":"Utpanna Ekadasi","date":"2026-12-04","breakDate":"2026-12-05","bfStart":"07:36","bfEnd":"10:36"},{"type":"ekadashi","name":"Moksada Ekadasi","date":"2026-12-20","note":"Trisprsa Mahadvadasi","breakDate":"2026-12-21","bfStart":"07:47","bfEnd":"10:45"},{"type":"festival","name":"Gita Jayanti","date":"2026-12-20","desc":"Advent of Srimad Bhagavad-gita"},{"type":"ekadashi","name":"Saphala Ekadasi","date":"2027-01-02","breakDate":"2027-01-03","bfStart":"11:12"},{"type":"ekadashi","name":"Putrada Ekadasi","date":"2027-01-18","breakDate":"2027-01-19","bfStart":"07:50","bfEnd":"10:54"},{"type":"ekadashi","name":"Bhaimi Ekadasi","date":"2027-02-17","breakDate":"2027-02-18","bfStart":"07:29","bfEnd":"10:50"},{"type":"festival","name":"Nityananda Trayodasi","date":"2027-02-18","desc":"Appearance of Sri Nityananda Prabhu"},{"type":"ekadashi","name":"Vijaya Ekadasi","date":"2027-03-03","breakDate":"2027-03-04","bfStart":"07:14","bfEnd":"10:43"},{"type":"ekadashi","name":"Amalaki vrata Ekadasi","date":"2027-03-18","breakDate":"2027-03-19","bfStart":"07:54","bfEnd":"11:34"},{"type":"ekadashi","name":"Papamocani Ekadasi","date":"2027-04-02","breakDate":"2027-04-03","bfStart":"07:34","bfEnd":"11:24"},{"type":"festival","name":"Rama Navami","date":"2027-04-14","desc":"Appearance of Lord Ramacandra","fast":"Fast till sunset"},{"type":"ekadashi","name":"Kamada Ekadasi","date":"2027-04-16","breakDate":"2027-04-17","bfStart":"07:15","bfEnd":"11:16"},{"type":"ekadashi","name":"Varuthini Ekadasi","date":"2027-05-02","breakDate":"2027-05-03","bfStart":"06:57","bfEnd":"09:36"},{"type":"ekadashi","name":"Mohini Ekadasi","date":"2027-05-16","note":"Trisprsa Mahadvadasi","breakDate":"2027-05-17","bfStart":"06:46","bfEnd":"11:04"},{"type":"festival","name":"Narasimha Caturdasi","date":"2027-05-18","desc":"Appearance of Lord Nrsimhadeva","fast":"Fast till dusk"},{"type":"ekadashi","name":"Apara Ekadasi","date":"2027-05-31","breakDate":"2027-06-01","bfStart":"06:38","bfEnd":"11:03"},{"type":"ekadashi","name":"Pandava Nirjala Ekadasi","date":"2027-06-14","breakDate":"2027-06-15","bfStart":"06:36","bfEnd":"11:04"},{"type":"ekadashi","name":"Yogini Ekadasi","date":"2027-06-30","breakDate":"2027-07-01","bfStart":"06:40","bfEnd":"07:46"},{"type":"ekadashi","name":"Sayana Ekadasi","date":"2027-07-13","breakDate":"2027-07-14","bfStart":"09:04","bfEnd":"11:11"},{"type":"ekadashi","name":"Kamika Ekadasi","date":"2027-07-29","breakDate":"2027-07-30","bfStart":"06:57","bfEnd":"11:15"},{"type":"ekadashi","name":"Pavitraropana Ekadasi","date":"2027-08-12","breakDate":"2027-08-13","bfStart":"07:07","bfEnd":"11:17"},{"type":"festival","name":"Balarama Purnima","date":"2027-08-16","desc":"Appearance of Lord Balarama","fast":"Fast till noon"},{"type":"festival","name":"Janmastami","date":"2027-08-25","desc":"Appearance of Lord Sri Krsna","fast":"Fast till midnight"},{"type":"festival","name":"Srila Prabhupada Appearance","date":"2027-08-26","desc":"Vyasa-puja","fast":"Fast till noon"},{"type":"ekadashi","name":"Annada Ekadasi","date":"2027-08-27","breakDate":"2027-08-28","bfStart":"07:27","bfEnd":"11:18"},{"type":"festival","name":"Radhastami","date":"2027-09-07","desc":"Appearance of Srimati Radharani","fast":"Fast till noon"},{"type":"ekadashi","name":"Parsva Ekadasi","date":"2027-09-11","breakDate":"2027-09-12","bfStart":"07:27","bfEnd":"11:18"},{"type":"ekadashi","name":"Indira Ekadasi","date":"2027-09-26","note":"Trisprsa Mahadvadasi","breakDate":"2027-09-27","bfStart":"07:37","bfEnd":"11:18"},{"type":"ekadashi","name":"Pasankusa Ekadasi","date":"2027-10-10","breakDate":"2027-10-11","bfStart":"10:11","bfEnd":"11:18"},{"type":"festival","name":"Kartika (Damodara) month begins","date":"2027-10-15","desc":"Month of Damodara: offer a lamp daily","fast":"urad dal fast for one month"},{"type":"ekadashi","name":"Rama Ekadasi","date":"2027-10-25","breakDate":"2027-10-26","bfStart":"07:59","bfEnd":"11:20"},{"type":"festival","name":"Govardhana Puja","date":"2027-10-30","desc":"Go Puja and Annakuta"},{"type":"festival","name":"Srila Prabhupada Disappearance","date":"2027-11-01","fast":"Fast till noon"},{"type":"ekadashi","name":"Utthana Ekadasi","date":"2027-11-09","breakDate":"2027-11-10","bfStart":"07:13","bfEnd":"10:24"},{"type":"festival","name":"Kartika (Damodara) month ends","date":"2027-11-13","desc":"Last day of Kartika / Bhisma Pancaka"},{"type":"ekadashi","name":"Utpanna Ekadasi","date":"2027-11-23","breakDate":"2027-11-24","bfStart":"07:26","bfEnd":"10:30"},{"type":"ekadashi","name":"Moksada Ekadasi","date":"2027-12-09","breakDate":"2027-12-10","bfStart":"07:40","bfEnd":"10:39"},{"type":"festival","name":"Gita Jayanti","date":"2027-12-09","desc":"Advent of Srimad Bhagavad-gita"},{"type":"ekadashi","name":"Saphala Ekadasi","date":"2027-12-23","breakDate":"2027-12-24","bfStart":"07:48","bfEnd":"10:46"}];
+
+(function(){
+'use strict';
+var KEY='sadhanaJapa.v1', $=function(id){return document.getElementById(id)};
+var S, wakeLock=null, calMonth=null, planEditType='weekday', editingHoly=-1;
+var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var MONTHS_L=['January','February','March','April','May','June','July','August','September','October','November','December'];
+var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var TYPES={weekday:'Weekday',late:'Late morning',weekend:'Weekend / day off'};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function todayKey(){return SL.dateKey(new Date())}
+function nice(k){var p=k.split('-');return WD[SL.weekday(k)]+' '+MONTHS[+p[1]-1]+' '+(+p[2])}
+function load(){
+  try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+  if(!SL.validImport(S)){S=SL.blankState(todayKey());S.history=SL.seedHistory();}
+  if(!S.holy) S.holy=BUNDLED_HOLY.slice();
+  if(!S.settings.plans) S.settings.plans=SL.defaultPlans();
+  if(!S.settings.dayTypes) S.settings.dayTypes={};
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Could not save. Please export a backup.')}}
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove('on')},2600)}
+function checkDay(){
+  var prev=S.today.date;
+  if(SL.rollover(S,todayKey())){
+    var h=S.history[prev];save();
+    toast('New day 🙏 '+nice(prev)+' saved: '+h.rounds+'/'+h.target);
+    renderAll();
+  }
+}
+function vib(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
+function wantWake(){return S.settings.wakeLock&&!$('v-japa').classList.contains('hide')&&document.visibilityState==='visible'}
+function requestWake(){
+  if(!('wakeLock' in navigator)||wakeLock||!wantWake())return;
+  navigator.wakeLock.request('screen').then(function(l){wakeLock=l;l.addEventListener('release',function(){wakeLock=null})}).catch(function(){});
+}
+function releaseWake(){if(wakeLock){wakeLock.release().catch(function(){});wakeLock=null}}
+
+/* ---------- Japa ---------- */
+function renderJapa(){
+  var t=S.today,tot=SL.totalRounds(t),tg=t.target,base=S.settings.baseTarget;
+  $('hdrDate').textContent=nice(t.date);
+  $('totNum').textContent=tot;
+  $('totOf').textContent='of '+tg+' rounds';
+  var frac=tg>0?Math.min(1,tot/tg):0;
+  $('ringArc').setAttribute('stroke-dashoffset',(314.16*(1-frac)).toFixed(1));
+  $('ringArc').setAttribute('stroke',tot>=tg?'#e7c26a':'#f4a340');
+  $('beadNum').textContent=SL.beadsInRound(t.counter);
+  var cr=SL.roundsFromCounter(t.counter);
+  $('padSub').textContent='Counter '+t.counter.toLocaleString()+' · '+cr+' round'+(cr===1?'':'s');
+  $('mNum').textContent=t.morning;
+  var mk=tg-base;
+  if(mk>0){$('makeup').textContent='Includes +'+mk+' makeup from yesterday. Gently, no rush.';$('makeup').classList.remove('hide')}else $('makeup').classList.add('hide');
+  if(tot>=tg&&tg>0){$('makeup').textContent='All '+tg+' rounds complete today. Hare Krishna 🙏';$('makeup').classList.remove('hide')}
+  $('gitaChk').checked=!!t.gita;
+  if(document.activeElement!==$('bookmark'))$('bookmark').value=S.bookmark||'';
+  $('lastRead').textContent=S.bookmark?'Last read: '+S.bookmark:'No bookmark yet';
+  renderNext();renderBanner();
+}
+function curPlan(){var ty=SL.dayType(S.today.date,S.settings.dayTypes);return {type:ty,plan:S.settings.plans[ty]||[]}}
+function nowMin(){var d=new Date();return d.getHours()*60+d.getMinutes()}
+function renderNext(){
+  var cp=curPlan(),st=SL.blockStatus(cp.plan,nowMin()),b=cp.plan[st.index],h='';
+  if(st.state==='now')h='<div class="lbl">Now</div><div class="what">'+esc(b.label)+'</div><div class="small">'+SL.fmt12(b.start)+(b.end?' – '+SL.fmt12(b.end):'')+'</div>';
+  else if(st.state==='next')h='<div class="lbl">Next</div><div class="what">'+esc(b.label)+'</div><div class="small">at '+SL.fmt12(b.start)+'</div>';
+  else{var tk=SL.addDays(S.today.date,1),tp=S.settings.plans[SL.dayType(tk,S.settings.dayTypes)]||[],w=tp[0];h='<div class="lbl">Rest well</div><div class="what">Tomorrow</div><div class="small">'+(w?esc(w.label)+' '+SL.fmt12(w.start):'')+'</div>'}
+  h+='<div class="small" style="margin-top:4px">'+TYPES[cp.type]+'</div>';
+  $('nextBox').innerHTML=h;
+}
+function holyLine(x){
+  var e=x.e,bf=e.breakDate?('break fast '+nice(e.breakDate)+(e.bfStart?', '+SL.fmt12(e.bfStart)+(e.bfEnd?'–'+SL.fmt12(e.bfEnd):' or later'):'')):'';
+  if(x.kind==='break')return '<b>Break fast today</b> ('+esc(e.name)+')'+(e.bfStart?': '+SL.fmt12(e.bfStart)+(e.bfEnd?' – '+SL.fmt12(e.bfEnd):' or later'):'');
+  var when=x.days===0?'<b>Today: '+esc(e.name)+'</b>':x.days===1?'<b>'+esc(e.name)+'</b> tomorrow':'<b>'+esc(e.name)+'</b> in '+x.days+' days';
+  return when+' · '+nice(e.date)+(e.type==='ekadashi'?' (fast)':'')+(bf?' · '+bf:'')+(e.fast?' · '+esc(e.fast):'');
+}
+function renderBanner(){
+  var n=SL.nextHoly(S.holy,S.today.date),b=$('holyBanner');
+  var ek=n.filter(function(x){return x.e.type==='ekadashi'||x.kind==='break'})[0],fe=n.filter(function(x){return x.e.type!=='ekadashi'})[0];
+  var parts=[];if(ek)parts.push(holyLine(ek));if(fe&&fe.days<=21&&(!ek||fe.e!==ek.e))parts.push(holyLine(fe));
+  if(parts.length){b.innerHTML='🪔 '+parts.join('<br>🌸 ');b.classList.remove('hide')}else b.classList.add('hide');
+}
+function tap(ev){
+  if(ev&&ev.button>0)return;
+  S.today.counter++;
+  var done=S.today.counter%108===0;
+  if(done){if(S.settings.vibRound)vib([180,90,180]);var p=$('pad');p.classList.add('flash');setTimeout(function(){p.classList.remove('flash')},500);
+    var tot=SL.totalRounds(S.today);toast(tot>=S.today.target?'Round complete. All '+S.today.target+' done today 🙏':'Round complete · '+tot+' of '+S.today.target);}
+  else if(S.settings.vibBead)vib(12);
+  save();renderJapa();requestWake();
+}
+
+/* ---------- Plan ---------- */
+function renderPlan(){
+  var cp=curPlan(),ov=S.settings.dayTypes[S.today.date],h='';
+  [['auto','Auto'],['weekday','Weekday'],['late','Late AM'],['weekend','Weekend']].forEach(function(o){var on=(o[0]==='auto'&&!ov)||o[0]===ov;h+='<button type="button" data-t="'+o[0]+'" class="'+(on?'on':'')+'">'+o[1]+'</button>'});
+  $('typeSeg').innerHTML=h;
+  $('typeNote').textContent=(ov?'Set by hand for today: ':'Chosen automatically: ')+TYPES[cp.type];
+  var st=SL.blockStatus(cp.plan,nowMin()),sorted=cp.plan.map(function(b,i){return [b,i]}).sort(function(a,b){return SL.toMin(a[0].start)-SL.toMin(b[0].start)});
+  $('planList').innerHTML=sorted.map(function(x){var b=x[0],cls=x[1]===st.index?st.state:'';return '<div class="blk '+cls+'"><div class="t">'+SL.fmt12(b.start)+(b.end?' – '+SL.fmt12(b.end):'')+'</div><div>'+esc(b.label)+(cls==='now'?'<span class="tag">now</span>':cls==='next'?'<span class="tag">next</span>':'')+'</div></div>'}).join('')+(st.state==='done'?'<div class="small" style="margin:8px">Today’s plan is done. Rest well 🙏</div>':'');
+}
+
+/* ---------- Holy ---------- */
+function renderHoly(){
+  var tk=S.today.date,items=S.holy.slice().sort(function(a,b){return a.date<b.date?-1:1}).filter(function(e){return e.date>=tk||e.breakDate===tk});
+  var n=SL.nextHoly(S.holy,tk)[0],nb=$('holyNext');
+  if(n){nb.innerHTML='🪔 '+holyLine(n);nb.classList.remove('hide')}else nb.classList.add('hide');
+  var h='',m='';
+  items.forEach(function(e){var mm=e.date.slice(0,7);if(mm!==m){m=mm;h+='<div class="mh">'+MONTHS_L[+mm.slice(5)-1]+' '+mm.slice(0,4)+'</div>'}
+    h+='<div class="hol"><div class="dt">'+nice(e.date)+'</div><div><div class="nm '+(e.type==='ekadashi'?'ek':'')+'">'+esc(e.name)+'</div>'+
+    (e.desc?'<div class="small">'+esc(e.desc)+'</div>':'')+
+    (e.breakDate?'<div class="small">Break fast '+nice(e.breakDate)+(e.bfStart?', '+SL.fmt12(e.bfStart)+(e.bfEnd?' – '+SL.fmt12(e.bfEnd):' or later'):'')+'</div>':'')+
+    (e.fast?'<div class="small">'+esc(e.fast)+'</div>':'')+(e.note?'<div class="small">'+esc(e.note)+'</div>':'')+'</div></div>'});
+  $('holyList').innerHTML=h||'<p class="small">No upcoming dates. Add some in Settings.</p>';
+}
+
+/* ---------- History ---------- */
+function dayRec(k){if(k===S.today.date)return {rounds:SL.totalRounds(S.today),target:S.today.target};return S.history[k]}
+function renderHist(){
+  var s=SL.streak(S.history,S.today),tot=SL.totalRounds(S.today);
+  var msg=s>0?'<b style="font-size:20px;color:var(--gold)">'+s+'</b> day'+(s===1?'':'s')+' in a row with all rounds complete 🌼':'Every round is precious. Today is a fresh start 🌱';
+  var all=0;Object.keys(S.history).forEach(function(k){all+=S.history[k].rounds||0});all+=tot;
+  $('streakBox').innerHTML=msg+'<div class="small" style="margin-top:4px">'+all.toLocaleString()+' rounds logged in all.</div>';
+  if(!calMonth)calMonth=S.today.date.slice(0,7);
+  var y=+calMonth.slice(0,4),mo=+calMonth.slice(5,7);
+  $('calTitle').textContent=MONTHS_L[mo-1]+' '+y;
+  var first=calMonth+'-01',start=SL.weekday(first),dim=new Date(Date.UTC(y,mo,0)).getUTCDate(),h='',sum=0,full=0;
+  WD.forEach(function(w){h+='<div class="h">'+w[0]+'</div>'});
+  for(var i=0;i<start;i++)h+='<div class="c empty"></div>';
+  for(var d=1;d<=dim;d++){var k=calMonth+'-'+(d<10?'0':'')+d,r=dayRec(k),cls='c';
+    if(r){cls+=SL.isComplete(r)?' full':' part';sum+=r.rounds;if(SL.isComplete(r))full++}
+    if(k===S.today.date)cls+=' today';
+    h+='<button type="button" class="'+cls+'" data-k="'+k+'"><span class="dn">'+d+'</span><span class="r">'+(r?r.rounds+'/'+r.target:'')+'</span></button>'}
+  $('cal').innerHTML=h;
+  $('calSum').textContent=sum?sum+' rounds this month · '+full+' full day'+(full===1?'':'s'):'Nothing logged this month yet.';
+}
+
+/* ---------- Settings ---------- */
+function renderSet(){
+  $('sBase').value=S.settings.baseTarget;$('sVibBead').checked=S.settings.vibBead;$('sVibRound').checked=S.settings.vibRound;$('sWake').checked=S.settings.wakeLock;
+  var h='';Object.keys(TYPES).forEach(function(t){h+='<button type="button" data-t="'+t+'" class="'+(t===planEditType?'on':'')+'">'+(t==='weekend'?'Weekend':TYPES[t])+'</button>'});
+  $('planEditSeg').innerHTML=h;
+  $('planEdit').innerHTML=(S.settings.plans[planEditType]||[]).map(function(b,i){return '<div class="blkedit" data-i="'+i+'"><input type="text" data-f="label" value="'+esc(b.label)+'"><input type="time" data-f="start" value="'+esc(b.start)+'"><input type="time" data-f="end" value="'+esc(b.end)+'"><button type="button" class="btn s" data-del="'+i+'" aria-label="Delete block">✕</button></div>'}).join('');
+  var list=S.holy.map(function(e,i){return [e,i]}).sort(function(a,b){return a[0].date<b[0].date?-1:1});
+  $('holyEdit').innerHTML=list.map(function(x){var e=x[0];return '<div class="hol"><div class="dt">'+esc(e.date)+'</div><div style="flex:1">'+esc(e.name)+'</div><button type="button" class="btn s" data-hedit="'+x[1]+'">Edit</button><button type="button" class="btn s" data-hdel="'+x[1]+'">✕</button></div>'}).join('');
+}
+function fillHolyForm(e){$('hDate').value=e.date||'';$('hType').value=e.type||'ekadashi';$('hName').value=e.name||'';$('hBreak').value=e.breakDate||'';$('hNote').value=e.fast||e.note||'';$('hFrom').value=e.bfStart||'';$('hTo').value=e.bfEnd||''}
+
+/* ---------- Dialog ---------- */
+function dialog(html,onOk){
+  var d=$('dlg'),f=$('dlgForm');
+  f.innerHTML=html+'<div class="row" style="margin-top:14px"><button class="btn" value="cancel" formnovalidate>Cancel</button><button class="btn p" value="ok">Save</button></div>';
+  d.onclose=function(){if(d.returnValue==='ok')onOk(f)};
+  d.returnValue='';d.showModal();
+}
+function numField(id,label,v){return '<label class="f"><span>'+label+'</span><input type="number" min="0" id="'+id+'" value="'+v+'"></label>'}
+function intVal(f,id,fallback){var v=parseInt(f.querySelector('#'+id).value,10);return isNaN(v)||v<0?fallback:v}
+
+function renderAll(){renderJapa();renderPlan();renderHoly();renderHist();renderSet()}
+function show(v){
+  ['japa','plan','holy','hist','set'].forEach(function(x){$('v-'+x).classList.toggle('hide',x!==v)});
+  document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v)});
+  if(v==='japa')requestWake();else releaseWake();
+  renderAll();window.scrollTo(0,0);
+}
+
+function bind(){
+  $('pad').addEventListener('pointerdown',function(e){e.preventDefault();tap(e)});
+  $('pad').addEventListener('contextmenu',function(e){e.preventDefault()});
+  $('pad').addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){e.preventDefault();tap()}});
+  $('pad').tabIndex=0;
+  $('undo').onclick=function(){if(S.today.counter>0){S.today.counter--;save();renderJapa()}};
+  $('mPlus').onclick=function(){S.today.morning++;save();renderJapa()};
+  $('mMinus').onclick=function(){if(S.today.morning>0){S.today.morning--;save();renderJapa()}};
+  $('gitaChk').onchange=function(){S.today.gita=this.checked;save();if(this.checked)toast('Gita study marked 🙏')};
+  function saveBm(){var v=$('bookmark').value.trim();S.bookmark=v;save();renderJapa();if(v)toast('Last read: '+v)}
+  $('bmSave').onclick=saveBm;$('bookmark').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();saveBm();this.blur()}});
+  $('editToday').onclick=function(){var t=S.today;dialog('<b>Edit today ('+nice(t.date)+')</b>'+numField('eM','Morning bead rounds',t.morning)+numField('eC','Counter (total beads tapped today)',t.counter)+numField('eT','Today’s target (rounds)',t.target),function(f){t.morning=intVal(f,'eM',t.morning);t.counter=intVal(f,'eC',t.counter);t.target=Math.max(1,intVal(f,'eT',t.target));save();renderAll();toast('Today updated')})};
+  document.querySelectorAll('nav button').forEach(function(b){b.onclick=function(){show(b.dataset.v)}});
+  $('typeSeg').onclick=function(e){var b=e.target.closest('button');if(!b)return;var t=b.dataset.t;if(t==='auto')delete S.settings.dayTypes[S.today.date];else S.settings.dayTypes[S.today.date]=t;save();renderAll()};
+  $('calPrev').onclick=function(){var y=+calMonth.slice(0,4),m=+calMonth.slice(5)-1;if(m<1){m=12;y--}calMonth=y+'-'+(m<10?'0':'')+m;renderHist()};
+  $('calNext').onclick=function(){var y=+calMonth.slice(0,4),m=+calMonth.slice(5)+1;if(m>12){m=1;y++}calMonth=y+'-'+(m<10?'0':'')+m;renderHist()};
+  $('cal').onclick=function(e){var b=e.target.closest('button[data-k]');if(!b)return;var k=b.dataset.k;
+    if(k===S.today.date){$('editToday').click();return}
+    if(k>S.today.date){toast('That day hasn’t come yet');return}
+    var r=S.history[k]||{rounds:0,target:S.settings.baseTarget};
+    dialog('<b>'+nice(k)+'</b>'+numField('hR','Rounds chanted',r.rounds)+numField('hT','Target',r.target)+'<label class="chk"><input type="checkbox" id="hClr"> Clear this day</label>',function(f){if(f.querySelector('#hClr').checked)delete S.history[k];else S.history[k]=Object.assign({},r,{rounds:intVal(f,'hR',r.rounds),target:Math.max(1,intVal(f,'hT',r.target))});save();renderHist()})};
+  $('sBase').onchange=function(){var v=parseInt(this.value,10);if(v>0){var d=v-S.settings.baseTarget;S.settings.baseTarget=v;S.today.target=Math.max(1,S.today.target+d);save();renderAll()}};
+  $('sVibBead').onchange=function(){S.settings.vibBead=this.checked;save();if(this.checked)vib(12)};
+  $('sVibRound').onchange=function(){S.settings.vibRound=this.checked;save();if(this.checked)vib([180,90,180])};
+  $('sWake').onchange=function(){S.settings.wakeLock=this.checked;save()};
+  $('planEditSeg').onclick=function(e){var b=e.target.closest('button');if(!b)return;planEditType=b.dataset.t;renderSet()};
+  $('planEdit').addEventListener('change',function(e){var row=e.target.closest('.blkedit');if(!row||!e.target.dataset.f)return;S.settings.plans[planEditType][+row.dataset.i][e.target.dataset.f]=e.target.value;save();renderJapa();renderPlan()});
+  $('planEdit').addEventListener('click',function(e){var d=e.target.dataset.del;if(d==null)return;S.settings.plans[planEditType].splice(+d,1);save();renderAll()});
+  $('addBlock').onclick=function(){S.settings.plans[planEditType].push({label:'New block',start:'12:00',end:'',kind:'other'});save();renderSet()};
+  $('resetPlans').onclick=function(){if(confirm('Restore the default times for all three plans?')){S.settings.plans=SL.defaultPlans();save();renderAll();toast('Default times restored')}};
+  $('hSave').onclick=function(){var e={type:$('hType').value,name:$('hName').value.trim(),date:$('hDate').value};
+    if(!e.date||!e.name){toast('Please add a date and a name');return}
+    if($('hBreak').value)e.breakDate=$('hBreak').value;if($('hFrom').value)e.bfStart=$('hFrom').value;if($('hTo').value)e.bfEnd=$('hTo').value;if($('hNote').value.trim())e.fast=$('hNote').value.trim();
+    if(editingHoly>=0){var old=S.holy[editingHoly];if(old&&old.desc)e.desc=old.desc;S.holy[editingHoly]=e}else S.holy.push(e);
+    editingHoly=-1;fillHolyForm({});save();renderAll();toast('Saved')};
+  $('hClear').onclick=function(){editingHoly=-1;fillHolyForm({})};
+  $('holyEdit').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    if(b.dataset.hedit!=null){editingHoly=+b.dataset.hedit;fillHolyForm(S.holy[editingHoly]);$('hDate').scrollIntoView({behavior:'smooth',block:'center'})}
+    if(b.dataset.hdel!=null&&confirm('Remove '+S.holy[+b.dataset.hdel].name+'?')){S.holy.splice(+b.dataset.hdel,1);editingHoly=-1;save();renderAll()}};
+  $('hRestore').onclick=function(){if(confirm('Replace the holy-day list with the bundled ISKCON dates? Your own additions will be removed.')){S.holy=BUNDLED_HOLY.slice();save();renderAll();toast('Bundled dates restored')}};
+  $('expBtn').onclick=function(){var blob=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sadhana-japa-backup-'+todayKey()+'.json';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000);toast('Backup downloaded')};
+  $('expCopy').onclick=function(){var j=JSON.stringify(S);$('impText').value=j;if(navigator.clipboard)navigator.clipboard.writeText(j).then(function(){toast('Copied to clipboard')},function(){toast('Shown below. Select and copy it')});else toast('Shown below. Select and copy it')};
+  $('impFile').onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){$('impText').value=r.result};r.readAsText(f)};
+  $('impBtn').onclick=function(){var o;try{o=JSON.parse($('impText').value)}catch(e){toast('That doesn’t look like a backup');return}
+    if(!SL.validImport(o)){toast('That doesn’t look like a backup');return}
+    if(!confirm('Replace all data on this phone with this backup?'))return;
+    S=o;if(!S.holy)S.holy=BUNDLED_HOLY.slice();if(!S.settings.plans)S.settings.plans=SL.defaultPlans();if(!S.settings.dayTypes)S.settings.dayTypes={};
+    SL.rollover(S,todayKey());save();renderAll();$('impText').value='';toast('Backup restored 🙏')};
+  $('resetCounter').onclick=function(){if(!confirm('Reset today’s bead counter ('+S.today.counter+') to 0?'))return;if(!confirm('Are you sure? This can’t be undone.'))return;S.today.counter=0;save();renderAll();toast('Counter reset')};
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'){checkDay();renderJapa();requestWake()}});
+  setInterval(function(){checkDay();if(!$('v-japa').classList.contains('hide'))renderNext();if(!$('v-plan').classList.contains('hide'))renderPlan()},20000);
+}
+load();SL.rollover(S,todayKey());save();bind();renderAll();
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){navigator.serviceWorker.register('sw.js').catch(function(){});}
+})();
+</script>
+</body>
+</html>

@@ -90,6 +90,20 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
 .toast.on{opacity:1}
 .blkedit{display:grid;grid-template-columns:1.6fr 1fr 1fr auto;gap:6px;margin:6px 0;align-items:center}
 .blkedit input{min-height:38px;padding:6px}
+.speed{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0 0;text-align:center}
+.speed div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:6px 4px}
+.speed b{display:block;font-size:18px;font-variant-numeric:tabular-nums}
+.speed span{font-size:12px;color:var(--mute)}
+.eta{text-align:center;color:var(--mute);font-size:14px;margin-top:6px}
+.slow{text-align:center;color:var(--saf2);font-size:14px;margin-top:4px}
+.ek{background:linear-gradient(160deg,rgba(244,163,64,.16),rgba(22,39,90,.9));border:1px solid rgba(244,163,64,.45);border-radius:16px;padding:12px 14px;margin:8px 0}
+.ek h3{margin:0 0 6px;font-size:17px;color:var(--saf2)}
+.ek ul{margin:6px 0;padding-left:20px}.ek li{margin:2px 0}
+.verse{font-size:16px;line-height:1.5}
+.verse a{color:var(--saf2)}
+a{color:var(--saf2)}
+.upd{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:var(--saf);color:#1b1205;font-weight:600;border:0;border-radius:999px;padding:10px 18px;z-index:9;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+.blk .acts{margin-left:auto;flex:none}
 footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-size:15px;letter-spacing:.5px}
 .hide{display:none!important}
 </style>
@@ -101,6 +115,7 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
   <section id="v-japa">
     <div id="holyBanner" class="banner hide"></div>
     <div id="makeup" class="note hide"></div>
+    <div id="dayCards"></div>
     <div class="top">
       <div class="ring">
         <svg width="118" height="118" viewBox="0 0 118 118"><circle cx="59" cy="59" r="50" fill="none" stroke="#24366e" stroke-width="10"/><circle id="ringArc" cx="59" cy="59" r="50" fill="none" stroke="#f4a340" stroke-width="10" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"/></svg>
@@ -113,6 +128,9 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
       <div class="sub" id="padSub">Counter 0 · 0 rounds</div>
       <div class="hint">Tap anywhere here for each bead</div>
     </div>
+    <div class="speed"><div><b id="spNow">–</b><span>this round</span></div><div><b id="spLast">–</b><span>last round</span></div><div><b id="spAvg">–</b><span id="spAvgL">your pace</span></div></div>
+    <div class="slow hide" id="slowNote">That round was quick. Slow down a little and hear each name 🙏</div>
+    <div class="eta" id="eta"></div>
     <div class="row">
       <button class="btn s" id="undo" aria-label="Undo one bead">↶ −1 bead</button>
       <div class="step"><span class="small">Morning<br>bead rounds</span><button id="mMinus" aria-label="Minus one morning round">−</button><span class="n" id="mNum">0</span><button id="mPlus" aria-label="Plus one morning round">+</button></div>
@@ -121,7 +139,11 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
       <label class="chk"><input type="checkbox" id="gitaChk"> Gita study today</label>
       <div class="row" style="margin:6px 0 0"><input type="text" id="bookmark" inputmode="decimal" placeholder="Chapter.verse, e.g. 2.47" style="flex:1"><button class="btn s" id="bmSave">Save</button></div>
       <div class="small" id="lastRead" style="margin-top:6px"></div>
+      <input type="text" id="studyNote" placeholder="Study note for today (optional, one line)" style="margin-top:8px">
+      <div style="margin-top:8px"><button class="btn s" id="copyObs" type="button">Copy for Obsidian</button></div>
     </div>
+    <div class="card"><b>Tulasi &amp; altar</b><div id="altarList"></div></div>
+    <div class="card"><div class="verse" id="verse"></div></div>
     <div style="text-align:center"><button class="btn s" id="editToday">Edit today’s numbers</button></div>
   </section>
 
@@ -132,7 +154,15 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
       <div class="small" id="typeNote" style="margin-top:6px"></div>
     </div>
     <div id="planList"></div>
-    <div class="small" style="margin:10px 4px">Times can be changed in Settings.</div>
+    <div class="small" style="margin:10px 4px">Times can be changed in Settings. Your Google Calendar may already have these blocks, so check before adding them again.</div>
+    <div class="card">
+      <b>Calendar &amp; reminders</b>
+      <p class="small">“📅” adds one block to Google Calendar (repeating weekly for weekday and weekend plans). The .ics file has every weekday and weekend block as weekly events with reminders, plus this week’s late-morning days.</p>
+      <button class="btn" id="icsBtn">Download all as .ics</button>
+      <p class="small" style="margin-top:12px">Block reminders: a notification at each block’s start time. Phones only deliver these reliably while the app is open or recently used, so keep your real alarms in the Clock app. The app can’t set phone alarms.</p>
+      <button class="btn" id="notifBtn">Turn on block reminders</button>
+      <div class="small" id="notifState" style="margin-top:6px"></div>
+    </div>
   </section>
 
   <section id="v-holy" class="hide">
@@ -147,6 +177,7 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
     <div class="cal" id="cal"></div>
     <div class="small" id="calSum" style="margin-top:8px"></div>
     <div class="small" style="margin-top:4px">Tap a day to correct it.</div>
+    <div style="margin-top:10px"><button class="btn s" id="mdMonth" type="button">Export month as Markdown</button></div>
   </section>
 
   <section id="v-set" class="hide">
@@ -156,6 +187,14 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
       <label class="chk"><input type="checkbox" id="sVibBead"> Short buzz on every bead</label>
       <label class="chk"><input type="checkbox" id="sVibRound"> Longer buzz at each round</label>
       <label class="chk"><input type="checkbox" id="sWake"> Keep screen on while counting</label>
+      <label class="f"><span>Round pace for estimates</span><select id="sPace"><option value="adaptive">Adaptive (learns from your rounds)</option><option value="6">6 min</option><option value="7">7 min</option><option value="8">8 min</option><option value="9">9 min</option><option value="10">10 min</option><option value="12">12 min</option><option value="15">15 min</option></select></label>
+      <label class="chk"><input type="checkbox" id="sChimeRound"> Soft bell at each completed round</label>
+      <label class="chk"><input type="checkbox" id="sChimeBlocks"> Soft bell when a plan block starts (while the app is open)</label>
+    </div>
+    <div class="card">
+      <b>Tulasi &amp; altar checklist</b>
+      <div id="altarEdit"></div>
+      <div class="row"><input type="text" id="altarNew" placeholder="Add an item" style="flex:1"><button class="btn s" id="altarAdd">Add</button></div>
     </div>
     <div class="card">
       <b>Daily plans</b>
@@ -207,11 +246,13 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
 
 <dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
 <div class="toast" id="toast"></div>
+<button class="upd hide" id="updBar">Updated, tap to refresh</button>
 
 <script>
 /* Sadhana Japa core logic: pure functions, testable in node */
 var SL = (function () {
-  var BEADS = 108;
+  var BEADS = 108, MIN = 60000;
+  var DEFAULT_ALTAR = ['Offer water to Tulasi', 'Clean the altar', 'Offer obeisances (pranama)'];
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function dateKey(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
   function keyToUTC(k) { var p = k.split('-'); return Date.UTC(+p[0], +p[1] - 1, +p[2]); }
@@ -227,12 +268,13 @@ var SL = (function () {
     return Math.min(s, base);
   }
   function newDay(date, base, carry) {
-    return { date: date, counter: 0, morning: 0, carry: carry || 0, target: base + (carry || 0), gita: false };
+    return { date: date, counter: 0, morning: 0, carry: carry || 0, target: base + (carry || 0), gita: false, rounds: [], curStart: null, altar: {}, note: '', bm: '' };
   }
   function blankState(today) {
     return {
-      version: 1,
-      settings: { baseTarget: 16, vibBead: false, vibRound: true, wakeLock: true, plans: defaultPlans(), dayTypes: { '2026-11-25': 'late', '2026-11-26': 'weekend', '2026-11-27': 'late' } },
+      version: 2,
+      paceLog: [], lastExport: null, backupSnooze: null,
+      settings: { baseTarget: 16, vibBead: false, vibRound: true, wakeLock: true, pace: 'adaptive', chimeRound: false, chimeBlocks: false, notify: false, altarItems: DEFAULT_ALTAR.slice(), plans: defaultPlans(), dayTypes: { '2026-11-25': 'late', '2026-11-26': 'weekend', '2026-11-27': 'late' } },
       today: newDay(today, 16, 0),
       history: {},
       bookmark: '',
@@ -245,7 +287,8 @@ var SL = (function () {
     if (!t || t.date === todayKey) return false;
     if (daysBetween(t.date, todayKey) < 0) return false; // clock went backwards: leave data alone
     var total = totalRounds(t);
-    state.history[t.date] = { rounds: total, target: t.target, gita: !!t.gita, morning: t.morning, counter: t.counter };
+    var items = state.settings.altarItems || [], done = items.filter(function (it) { return t.altar && t.altar[it]; }).length;
+    state.history[t.date] = { rounds: total, target: t.target, gita: !!t.gita, morning: t.morning, counter: t.counter, note: t.note || '', bm: t.bm || '', altar: { done: done, of: items.length, items: items.filter(function (it) { return t.altar && t.altar[it]; }) } };
     var gap = daysBetween(t.date, todayKey);
     var carry = gap === 1 ? computeCarry(t.target, total, base) : 0; // never more than one day back
     state.today = newDay(todayKey, base, carry);
@@ -310,17 +353,174 @@ var SL = (function () {
     d.forEach(function (r) { h[r[0]] = { rounds: r[1], target: r[2] }; });
     return h;
   }
+
+  // ---- v2: migration (never drops data; idempotent) ----
+  function migrate(s) {
+    if (!s || typeof s !== 'object') return s;
+    var st = s.settings = s.settings || {};
+    function def(o, k, v) { if (o[k] === undefined || o[k] === null) o[k] = v; }
+    def(st, 'baseTarget', 16); def(st, 'vibBead', false); def(st, 'vibRound', true); def(st, 'wakeLock', true);
+    def(st, 'pace', 'adaptive'); def(st, 'chimeRound', false); def(st, 'chimeBlocks', false); def(st, 'notify', false);
+    if (!Array.isArray(st.altarItems)) st.altarItems = DEFAULT_ALTAR.slice();
+    if (!st.plans) st.plans = defaultPlans();
+    if (!st.dayTypes) st.dayTypes = {};
+    def(s, 'history', {}); def(s, 'bookmark', '');
+    if (!Array.isArray(s.paceLog)) s.paceLog = [];
+    if (s.lastExport === undefined) s.lastExport = null;
+    if (s.backupSnooze === undefined) s.backupSnooze = null;
+    if (s.today) { if (!Array.isArray(s.today.rounds)) s.today.rounds = []; if (s.today.curStart === undefined) s.today.curStart = null; if (!s.today.altar || typeof s.today.altar !== 'object') s.today.altar = {}; if (typeof s.today.note !== 'string') s.today.note = ''; if (typeof s.today.bm !== 'string') s.today.bm = ''; }
+    if (!s.version || s.version < 2) s.version = 2;
+    return s;
+  }
+  // ---- v2: round timing ----
+  // Call on every bead tap. Mutates day and log. Returns {completed, dur} (dur ms or null).
+  function tapBead(day, now, log) {
+    if (day.counter % BEADS === 0) day.curStart = now; // first bead of a new round
+    else if (day.curStart == null) day.curStart = { partial: now }; // round began before timing existed
+    day.counter++;
+    if (day.counter % BEADS !== 0) return { completed: false, dur: null };
+    var st = day.curStart, dur = (typeof st === 'number') ? now - st : null;
+    day.rounds.push({ s: typeof st === 'number' ? st : null, e: now });
+    if (dur != null && log) { log.push({ e: now, d: dur }); while (log.length > 40) log.shift(); }
+    day.curStart = null;
+    return { completed: true, dur: dur };
+  }
+  function undoBead(day, log) {
+    if (day.counter <= 0) return;
+    if (day.counter % BEADS === 0) { // undoing the bead that completed a round
+      var r = day.rounds.pop();
+      if (r && log && log.length && log[log.length - 1].e === r.e) log.pop();
+      day.curStart = r && r.s ? r.s : { partial: Date.now() };
+    }
+    day.counter--;
+    if (day.counter % BEADS === 0) day.curStart = null;
+  }
+  var BREAK = 30 * MIN, FALLBACK = 10 * MIN;
+  function paceStats(log) {
+    var v = (log || []).map(function (x) { return x.d; }).filter(function (d) { return d >= MIN && d <= BREAK; }).slice(-10);
+    if (!v.length) return { n: 0, avg: null };
+    return { n: v.length, avg: v.reduce(function (a, b) { return a + b; }, 0) / v.length };
+  }
+  function paceMs(setting, stats) {
+    if (setting && setting !== 'adaptive' && +setting > 0) return +setting * MIN;
+    return stats && stats.n >= 3 ? stats.avg : FALLBACK;
+  }
+  function norm(stats) { return stats && stats.n >= 3 ? stats.avg : FALLBACK; }
+  function slowDown(lastDur, stats) { var n = norm(stats); return lastDur != null && lastDur >= MIN && lastDur < 0.7 * n && lastDur < 6 * MIN; }
+  function curElapsed(day, now) { return typeof day.curStart === 'number' ? now - day.curStart : null; }
+  function eta(left, pace, elapsed, now) {
+    if (left <= 0) return null;
+    var e = Math.min(Math.max(elapsed || 0, 0), pace);
+    return now + left * pace - e;
+  }
+  function fmtDur(ms) { if (ms == null) return '–'; var s = Math.round(ms / 1000), m = Math.floor(s / 60); return m + ':' + pad(s % 60); }
+  // ---- v2: holy day modes ----
+  function holyToday(list, key) {
+    var r = { fast: null, breakfast: null, festivals: [] };
+    (list || []).forEach(function (e) {
+      if (e.type === 'ekadashi' && e.date === key) r.fast = e;
+      else if (e.type !== 'ekadashi' && e.date === key) r.festivals.push(e);
+      if (e.breakDate === key) r.breakfast = e;
+    });
+    return r;
+  }
+  // ---- v2: verse of the day ----
+  function verseIndex(key, n) { return ((Math.floor(keyToUTC(key) / 86400000) % n) + n) % n; }
+  function vedabaseUrl(ch, v) { return 'https://vedabase.io/en/library/bg/' + ch + '/' + v + '/'; }
+  // ---- v2: backup reminder ----
+  function backupDue(key, lastExport, snooze) {
+    if (snooze === key) return false;
+    if (!lastExport) return true;
+    var d = daysBetween(lastExport, key);
+    if (d >= 7) return true;
+    return weekday(key) === 0 && lastExport !== key;
+  }
+  // ---- v2: calendar ----
+  var BYDAY = { weekday: 'MO,TU,WE,TH,FR', weekend: 'SA,SU' };
+  function nextDateOfType(type, fromKey, overrides) {
+    for (var i = 0; i < 14; i++) { var k = addDays(fromKey, i); if (dayType(k, overrides) === type) return k; }
+    return fromKey;
+  }
+  function blockEnd(b) { if (b.end) return b.end; var m = toMin(b.start) + 15; return pad(Math.floor(m / 60) % 24) + ':' + pad(m % 60); }
+  function compact(k, hhmm) { return k.replace(/-/g, '') + 'T' + hhmm.replace(':', '') + '00'; }
+  function gcalLink(b, type, dateKey) {
+    var q = 'action=TEMPLATE&text=' + encodeURIComponent(b.label) + '&dates=' + compact(dateKey, b.start) + '/' + compact(dateKey, blockEnd(b)) +
+      '&ctz=America/Chicago&details=' + encodeURIComponent('From Sadhana Japa (' + type + ' plan). Hare Krishna');
+    if (BYDAY[type]) q += '&recur=' + encodeURIComponent('RRULE:FREQ=WEEKLY;BYDAY=' + BYDAY[type]);
+    return 'https://calendar.google.com/calendar/render?' + q;
+  }
+  function icsEscape(s) { return String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n'); }
+  function buildICS(plans, fromKey, overrides, stamp) {
+    var L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Sadhana Japa//EN', 'CALSCALE:GREGORIAN', 'X-WR-CALNAME:Sadhana',
+      'BEGIN:VTIMEZONE', 'TZID:America/Chicago',
+      'BEGIN:DAYLIGHT', 'TZOFFSETFROM:-0600', 'TZOFFSETTO:-0500', 'TZNAME:CDT', 'DTSTART:19700308T020000', 'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU', 'END:DAYLIGHT',
+      'BEGIN:STANDARD', 'TZOFFSETFROM:-0500', 'TZOFFSETTO:-0600', 'TZNAME:CST', 'DTSTART:19701101T020000', 'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU', 'END:STANDARD',
+      'END:VTIMEZONE'];
+    var n = 0;
+    function ev(b, k, rrule, type) {
+      n++;
+      L.push('BEGIN:VEVENT', 'UID:sadhana-' + type + '-' + n + '-' + k.replace(/-/g, '') + '@sadhana-japa', 'DTSTAMP:' + stamp,
+        'DTSTART;TZID=America/Chicago:' + compact(k, b.start), 'DTEND;TZID=America/Chicago:' + compact(k, blockEnd(b)),
+        'SUMMARY:' + icsEscape(b.label));
+      if (rrule) L.push(rrule);
+      L.push('DESCRIPTION:' + icsEscape('Sadhana Japa ' + type + ' plan'),
+        'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsEscape(b.label), 'TRIGGER:' + (b.kind === 'wake' ? 'PT0M' : '-PT5M'), 'END:VALARM', 'END:VEVENT');
+    }
+    // Upcoming days whose plan differs from the usual weekday/weekend pattern
+    var odd = Object.keys(overrides || {}).sort().filter(function (k) { return k >= fromKey && overrides[k] !== dayType(k, {}); });
+    ['weekday', 'weekend'].forEach(function (type) {
+      var k = nextDateOfType(type, fromKey, {}); // recurring series use the plain weekday/weekend pattern
+      var skip = odd.filter(function (d) { return dayType(d, {}) === type; });
+      (plans[type] || []).forEach(function (b) {
+        var rr = 'RRULE:FREQ=WEEKLY;BYDAY=' + BYDAY[type];
+        if (skip.length) rr += '\r\nEXDATE;TZID=America/Chicago:' + skip.map(function (d) { return compact(d, b.start); }).join(',');
+        ev(b, k, rr, type);
+      });
+    });
+    odd.forEach(function (k) { (plans[overrides[k]] || []).forEach(function (b) { ev(b, k, null, overrides[k]); }); });
+    L.push('END:VCALENDAR');
+    var out = [];
+    L.join('\r\n').split('\r\n').forEach(function (l) { while (l.length > 74) { out.push(l.slice(0, 74)); l = ' ' + l.slice(74); } out.push(l); });
+    return out.join('\r\n') + '\r\n';
+  }
+  // Remaining block start times today, as {label, ts}
+  function upcomingBlocks(plan, key, nowMs) {
+    var p = key.split('-');
+    return (plan || []).map(function (b) { var m = toMin(b.start); return { label: b.label, start: b.start, ts: new Date(+p[0], +p[1] - 1, +p[2], Math.floor(m / 60), m % 60).getTime() }; })
+      .filter(function (x) { return x.ts > nowMs; }).sort(function (a, b) { return a.ts - b.ts; });
+  }
+  // ---- Markdown / Obsidian ----
+  function mdLine(key, rec) {
+    var parts = ['- ' + key];
+    if (rec.bm) parts.push('Gita [[BG ' + rec.bm + ']]');
+    parts.push('rounds ' + rec.rounds + '/' + rec.target);
+    if (rec.note) parts.push('note: ' + String(rec.note).replace(/[\r\n]+/g, ' '));
+    return parts.join(' · ');
+  }
+  function monthMarkdown(history, today, month) {
+    var L = ['# Japa & Gita: ' + month, ''], keys = Object.keys(history).filter(function (k) { return k.slice(0, 7) === month; });
+    if (today && today.date.slice(0, 7) === month && keys.indexOf(today.date) < 0) keys.push(today.date);
+    keys.sort().forEach(function (k) {
+      var r = (today && k === today.date) ? { rounds: totalRounds(today), target: today.target, bm: today.bm, note: today.note } : history[k];
+      L.push(mdLine(k, r));
+    });
+    if (keys.length === 0) L.push('_No days logged._');
+    return L.join('\n') + '\n';
+  }
   function validImport(o) { return o && typeof o === 'object' && o.today && o.settings && o.history && typeof o.today.date === 'string'; }
-  return { BEADS: BEADS, dateKey: dateKey, addDays: addDays, daysBetween: daysBetween, weekday: weekday, roundsFromCounter: roundsFromCounter, beadsInRound: beadsInRound, totalRounds: totalRounds, computeCarry: computeCarry, newDay: newDay, blankState: blankState, rollover: rollover, isComplete: isComplete, streak: streak, defaultPlans: defaultPlans, dayType: dayType, toMin: toMin, fmt12: fmt12, blockStatus: blockStatus, nextHoly: nextHoly, seedHistory: seedHistory, validImport: validImport };
+  return { BEADS: BEADS, dateKey: dateKey, addDays: addDays, daysBetween: daysBetween, weekday: weekday, roundsFromCounter: roundsFromCounter, beadsInRound: beadsInRound, totalRounds: totalRounds, computeCarry: computeCarry, newDay: newDay, blankState: blankState, rollover: rollover, isComplete: isComplete, streak: streak, defaultPlans: defaultPlans, dayType: dayType, toMin: toMin, fmt12: fmt12, blockStatus: blockStatus, nextHoly: nextHoly, seedHistory: seedHistory, validImport: validImport, migrate: migrate, tapBead: tapBead, undoBead: undoBead, paceStats: paceStats, paceMs: paceMs, norm: norm, slowDown: slowDown, curElapsed: curElapsed, eta: eta, fmtDur: fmtDur, holyToday: holyToday, verseIndex: verseIndex, vedabaseUrl: vedabaseUrl, backupDue: backupDue, nextDateOfType: nextDateOfType, gcalLink: gcalLink, buildICS: buildICS, upcomingBlocks: upcomingBlocks, DEFAULT_ALTAR: DEFAULT_ALTAR, mdLine: mdLine, monthMarkdown: monthMarkdown };
 })();
 if (typeof module !== 'undefined') module.exports = SL;
 
 const BUNDLED_HOLY = [{"type":"ekadashi","name":"Utpanna Ekadasi","date":"2026-12-04","breakDate":"2026-12-05","bfStart":"07:36","bfEnd":"10:36"},{"type":"ekadashi","name":"Moksada Ekadasi","date":"2026-12-20","note":"Trisprsa Mahadvadasi","breakDate":"2026-12-21","bfStart":"07:47","bfEnd":"10:45"},{"type":"festival","name":"Gita Jayanti","date":"2026-12-20","desc":"Advent of Srimad Bhagavad-gita"},{"type":"ekadashi","name":"Saphala Ekadasi","date":"2027-01-02","breakDate":"2027-01-03","bfStart":"11:12"},{"type":"ekadashi","name":"Putrada Ekadasi","date":"2027-01-18","breakDate":"2027-01-19","bfStart":"07:50","bfEnd":"10:54"},{"type":"ekadashi","name":"Bhaimi Ekadasi","date":"2027-02-17","breakDate":"2027-02-18","bfStart":"07:29","bfEnd":"10:50"},{"type":"festival","name":"Nityananda Trayodasi","date":"2027-02-18","desc":"Appearance of Sri Nityananda Prabhu"},{"type":"ekadashi","name":"Vijaya Ekadasi","date":"2027-03-03","breakDate":"2027-03-04","bfStart":"07:14","bfEnd":"10:43"},{"type":"ekadashi","name":"Amalaki vrata Ekadasi","date":"2027-03-18","breakDate":"2027-03-19","bfStart":"07:54","bfEnd":"11:34"},{"type":"ekadashi","name":"Papamocani Ekadasi","date":"2027-04-02","breakDate":"2027-04-03","bfStart":"07:34","bfEnd":"11:24"},{"type":"festival","name":"Rama Navami","date":"2027-04-14","desc":"Appearance of Lord Ramacandra","fast":"Fast till sunset"},{"type":"ekadashi","name":"Kamada Ekadasi","date":"2027-04-16","breakDate":"2027-04-17","bfStart":"07:15","bfEnd":"11:16"},{"type":"ekadashi","name":"Varuthini Ekadasi","date":"2027-05-02","breakDate":"2027-05-03","bfStart":"06:57","bfEnd":"09:36"},{"type":"ekadashi","name":"Mohini Ekadasi","date":"2027-05-16","note":"Trisprsa Mahadvadasi","breakDate":"2027-05-17","bfStart":"06:46","bfEnd":"11:04"},{"type":"festival","name":"Narasimha Caturdasi","date":"2027-05-18","desc":"Appearance of Lord Nrsimhadeva","fast":"Fast till dusk"},{"type":"ekadashi","name":"Apara Ekadasi","date":"2027-05-31","breakDate":"2027-06-01","bfStart":"06:38","bfEnd":"11:03"},{"type":"ekadashi","name":"Pandava Nirjala Ekadasi","date":"2027-06-14","breakDate":"2027-06-15","bfStart":"06:36","bfEnd":"11:04"},{"type":"ekadashi","name":"Yogini Ekadasi","date":"2027-06-30","breakDate":"2027-07-01","bfStart":"06:40","bfEnd":"07:46"},{"type":"ekadashi","name":"Sayana Ekadasi","date":"2027-07-13","breakDate":"2027-07-14","bfStart":"09:04","bfEnd":"11:11"},{"type":"ekadashi","name":"Kamika Ekadasi","date":"2027-07-29","breakDate":"2027-07-30","bfStart":"06:57","bfEnd":"11:15"},{"type":"ekadashi","name":"Pavitraropana Ekadasi","date":"2027-08-12","breakDate":"2027-08-13","bfStart":"07:07","bfEnd":"11:17"},{"type":"festival","name":"Balarama Purnima","date":"2027-08-16","desc":"Appearance of Lord Balarama","fast":"Fast till noon"},{"type":"festival","name":"Janmastami","date":"2027-08-25","desc":"Appearance of Lord Sri Krsna","fast":"Fast till midnight"},{"type":"festival","name":"Srila Prabhupada Appearance","date":"2027-08-26","desc":"Vyasa-puja","fast":"Fast till noon"},{"type":"ekadashi","name":"Annada Ekadasi","date":"2027-08-27","breakDate":"2027-08-28","bfStart":"07:27","bfEnd":"11:18"},{"type":"festival","name":"Radhastami","date":"2027-09-07","desc":"Appearance of Srimati Radharani","fast":"Fast till noon"},{"type":"ekadashi","name":"Parsva Ekadasi","date":"2027-09-11","breakDate":"2027-09-12","bfStart":"07:27","bfEnd":"11:18"},{"type":"ekadashi","name":"Indira Ekadasi","date":"2027-09-26","note":"Trisprsa Mahadvadasi","breakDate":"2027-09-27","bfStart":"07:37","bfEnd":"11:18"},{"type":"ekadashi","name":"Pasankusa Ekadasi","date":"2027-10-10","breakDate":"2027-10-11","bfStart":"10:11","bfEnd":"11:18"},{"type":"festival","name":"Kartika (Damodara) month begins","date":"2027-10-15","desc":"Month of Damodara: offer a lamp daily","fast":"urad dal fast for one month"},{"type":"ekadashi","name":"Rama Ekadasi","date":"2027-10-25","breakDate":"2027-10-26","bfStart":"07:59","bfEnd":"11:20"},{"type":"festival","name":"Govardhana Puja","date":"2027-10-30","desc":"Go Puja and Annakuta"},{"type":"festival","name":"Srila Prabhupada Disappearance","date":"2027-11-01","fast":"Fast till noon"},{"type":"ekadashi","name":"Utthana Ekadasi","date":"2027-11-09","breakDate":"2027-11-10","bfStart":"07:13","bfEnd":"10:24"},{"type":"festival","name":"Kartika (Damodara) month ends","date":"2027-11-13","desc":"Last day of Kartika / Bhisma Pancaka"},{"type":"ekadashi","name":"Utpanna Ekadasi","date":"2027-11-23","breakDate":"2027-11-24","bfStart":"07:26","bfEnd":"10:30"},{"type":"ekadashi","name":"Moksada Ekadasi","date":"2027-12-09","breakDate":"2027-12-10","bfStart":"07:40","bfEnd":"10:39"},{"type":"festival","name":"Gita Jayanti","date":"2027-12-09","desc":"Advent of Srimad Bhagavad-gita"},{"type":"ekadashi","name":"Saphala Ekadasi","date":"2027-12-23","breakDate":"2027-12-24","bfStart":"07:48","bfEnd":"10:46"}];
 
+/* Bhagavad-gita verse of the day: chapter.verse references only (read the verse on Vedabase). */
+const GITA_VERSES = [[2,7],[2,12],[2,13],[2,14],[2,20],[2,22],[2,23],[2,27],[2,40],[2,47],[2,48],[2,50],[2,56],[2,62],[2,63],[2,70],[3,9],[3,19],[3,21],[3,27],[3,35],[3,37],[4,7],[4,8],[4,9],[4,11],[4,34],[4,38],[5,10],[5,18],[5,29],[6,5],[6,6],[6,17],[6,26],[6,30],[6,34],[6,35],[6,47],[7,3],[7,7],[7,14],[7,16],[7,19],[8,5],[8,6],[8,7],[8,14],[8,15],[9,2],[9,4],[9,14],[9,22],[9,26],[9,27],[9,29],[9,30],[9,31],[9,34],[10,8],[10,9],[10,10],[10,11],[10,20],[10,41],[11,33],[11,55],[12,8],[12,13],[12,15],[14,26],[15,5],[15,7],[15,15],[16,21],[16,24],[17,15],[18,46],[18,54],[18,55],[18,61],[18,65],[18,66],[18,78]];
+
 (function(){
 'use strict';
 var KEY='sadhanaJapa.v1', $=function(id){return document.getElementById(id)};
-var S, wakeLock=null, calMonth=null, planEditType='weekday', editingHoly=-1;
+var S, wakeLock=null, actx=null, notifTimers=[], chimed={}, lastDur=null, lastDoneAt=0, calMonth=null, planEditType='weekday', editingHoly=-1;
 var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var MONTHS_L=['January','February','March','April','May','June','July','August','September','October','November','December'];
 var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -331,6 +531,7 @@ function nice(k){var p=k.split('-');return WD[SL.weekday(k)]+' '+MONTHS[+p[1]-1]
 function load(){
   try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
   if(!SL.validImport(S)){S=SL.blankState(todayKey());S.history=SL.seedHistory();}
+  else SL.migrate(S);
   if(!S.holy) S.holy=BUNDLED_HOLY.slice();
   if(!S.settings.plans) S.settings.plans=SL.defaultPlans();
   if(!S.settings.dayTypes) S.settings.dayTypes={};
@@ -342,7 +543,7 @@ function checkDay(){
   if(SL.rollover(S,todayKey())){
     var h=S.history[prev];save();
     toast('New day 🙏 '+nice(prev)+' saved: '+h.rounds+'/'+h.target);
-    renderAll();
+    renderAll();scheduleNotifs();
   }
 }
 function vib(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
@@ -371,8 +572,86 @@ function renderJapa(){
   if(tot>=tg&&tg>0){$('makeup').textContent='All '+tg+' rounds complete today. Hare Krishna 🙏';$('makeup').classList.remove('hide')}
   $('gitaChk').checked=!!t.gita;
   if(document.activeElement!==$('bookmark'))$('bookmark').value=S.bookmark||'';
+  if(document.activeElement!==$('studyNote'))$('studyNote').value=t.note||'';
   $('lastRead').textContent=S.bookmark?'Last read: '+S.bookmark:'No bookmark yet';
-  renderNext();renderBanner();
+  renderNext();renderBanner();renderSpeed();renderDayCards();renderAltar();renderVerse();
+}
+/* ---------- v2: round speed ---------- */
+function renderSpeed(){
+  var now=Date.now(),t=S.today,st=SL.paceStats(S.paceLog),el=SL.curElapsed(t,now),fixed=S.settings.pace!=='adaptive';
+  $('spNow').textContent=el!=null?SL.fmtDur(el):'–';
+  var lr=null;for(var i=t.rounds.length-1;i>=0;i--){if(t.rounds[i].s){lr=t.rounds[i].e-t.rounds[i].s;break}}
+  $('spLast').textContent=lr!=null?SL.fmtDur(lr):'–';
+  var pace=SL.paceMs(S.settings.pace,st);
+  $('spAvg').textContent=SL.fmtDur(pace);
+  $('spAvgL').textContent=fixed?'target pace':st.n>=3?'avg of last '+st.n:'pace (10 min to start)';
+  var showSlow=lastDur!=null&&SL.slowDown(lastDur,st)&&now-lastDoneAt<4*60000;
+  $('slowNote').classList.toggle('hide',!showSlow);
+  var left=t.target-SL.totalRounds(t),fin=SL.eta(left,pace,el,now);
+  if(fin){var d=new Date(fin),hm=(d.getHours()<10?'0':'')+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes(),nextDay=SL.dateKey(d)!==t.date;
+    $('eta').textContent=left+' left, done about '+SL.fmt12(hm)+(nextDay?' (after midnight)':'')+' at this pace';}
+  else $('eta').textContent=t.target>0?'All rounds done for today 🙏':'';
+}
+/* ---------- v2: chime ---------- */
+function audio(){try{if(!actx){var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;actx=new C()}if(actx.state==='suspended')actx.resume();return actx}catch(e){return null}}
+function chime(){var c=audio();if(!c)return;var t0=c.currentTime+0.02;
+  [[528,0.22,3.2],[1056,0.08,2.2],[1584,0.04,1.4],[792,0.06,2.6]].forEach(function(p){var o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=p[0];
+    g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(p[1],t0+0.015);g.gain.exponentialRampToValueAtTime(0.0001,t0+p[2]);o.connect(g);g.connect(c.destination);o.start(t0);o.stop(t0+p[2]+0.05)})}
+/* ---------- v2: Ekadashi / festival / backup cards ---------- */
+function renderDayCards(){
+  var k=S.today.date,h=SL.holyToday(S.holy,k),out='';
+  if(h.breakfast){var e=h.breakfast;out+='<div class="ek"><h3>🌅 Break your fast this morning</h3>'+esc(e.name)+' ends today. '+(e.bfStart?'Break fast between <b>'+SL.fmt12(e.bfStart)+(e.bfEnd?'</b> and <b>'+SL.fmt12(e.bfEnd):'</b> or later')+'</b> (Lubbock time).':'Break fast after sunrise.')+
+    '<div class="small" style="margin-top:6px">Simple is perfect: a little offered prasadam with grains, like rice or toast, is enough to break it properly.</div></div>'}
+  if(h.fast){var f=h.fast;out+='<div class="ek"><h3>🪔 Ekadashi today: '+esc(f.name)+'</h3>No grains, beans, or legumes today (ISKCON standard). Avoid:<ul>'+
+    '<li>Grains: rice, wheat, corn, oats, barley, and flour made from them</li><li>Beans, lentils (dal), peas, and soy, including tofu and soy sauce</li><li>Certain spices: asafoetida (hing), and as usual, no onion or garlic</li></ul>'+
+    'Fruits, vegetables, milk products, nuts, and potatoes are fine. A good day for a few extra rounds, or hearing a class or kirtan.'+
+    (f.breakDate?'<div class="small" style="margin-top:6px">Break fast '+nice(f.breakDate)+(f.bfStart?', '+SL.fmt12(f.bfStart)+(f.bfEnd?' – '+SL.fmt12(f.bfEnd):' or later'):'')+'.</div>':'')+'</div>'}
+  h.festivals.forEach(function(e){out+='<div class="ek"><h3>🌸 Today: '+esc(e.name)+'</h3>'+(e.desc?esc(e.desc)+'. ':'')+(e.fast?esc(e.fast)+'.':'')+'</div>'});
+  if(SL.backupDue(k,S.lastExport,S.backupSnooze)){out+='<div class="banner">💾 Back up your japa history'+(S.lastExport?' (last saved '+nice(S.lastExport)+')':'')+'.<div class="row" style="margin:8px 0 0"><button class="btn s p" id="bkNow" type="button">Back up now</button><button class="btn s" id="bkLater" type="button">Later</button></div></div>'}
+  $('dayCards').innerHTML=out;
+  var b=$('bkNow');if(b){b.onclick=exportData;$('bkLater').onclick=function(){S.backupSnooze=k;save();renderDayCards()}}
+}
+function renderAltar(){
+  var items=S.settings.altarItems||[];
+  $('altarList').innerHTML=items.map(function(it,i){return '<label class="chk"><input type="checkbox" data-ai="'+i+'"'+(S.today.altar[it]?' checked':'')+'> '+esc(it)+'</label>'}).join('')||'<div class="small">Add items in Settings.</div>';
+}
+function renderVerse(){
+  if(typeof GITA_VERSES==='undefined')return;var v=GITA_VERSES[SL.verseIndex(S.today.date,GITA_VERSES.length)];
+  $('verse').innerHTML='Verse of the day: <b>BG '+v[0]+'.'+v[1]+'</b> · <a href="'+SL.vedabaseUrl(v[0],v[1])+'" target="_blank" rel="noopener">Read on Vedabase ↗</a>';
+}
+/* ---------- v2: backup export (share sheet when available) ---------- */
+function markExported(){S.lastExport=todayKey();S.backupSnooze=null;save();renderDayCards();toast('Backup saved 🙏')}
+function download(name,text,type){var blob=new Blob([text],{type:type}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500)}
+function shareOrDownload(name,text,type,title,done){
+  var file=null;try{file=new File([text],name,{type:type})}catch(e){}
+  if(file&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:title}).then(done,function(err){if(err&&err.name==='AbortError')return;download(name,text,type);done()})}
+  else{download(name,text,type);done()}
+}
+function exportData(){shareOrDownload('sadhana-japa-backup-'+todayKey()+'.json',JSON.stringify(S,null,1),'application/json','Sadhana Japa backup',markExported)}
+/* ---------- v2: reminders ---------- */
+function icsStamp(){return new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+Z$/,'Z')}
+function clearNotifs(){notifTimers.forEach(clearTimeout);notifTimers=[]}
+function swReg(){return ('serviceWorker' in navigator)?navigator.serviceWorker.getRegistration():Promise.resolve(null)}
+function triggersSupported(){return typeof window.TimestampTrigger!=='undefined'&&('showTrigger' in Notification.prototype)}
+function showNote(title,body,tag){swReg().then(function(r){if(r)return r.showNotification(title,{body:body,tag:tag,icon:'icon.svg',badge:'icon.svg'});new Notification(title,{body:body,tag:tag})}).catch(function(){})}
+function scheduleNotifs(){
+  clearNotifs();var ok='Notification' in window&&Notification.permission==='granted';
+  renderNotifState();if(!S.settings.notify||!ok)return;
+  var bl=SL.upcomingBlocks(curPlan().plan,S.today.date,Date.now());
+  if(triggersSupported()){swReg().then(function(r){if(!r)return;bl.forEach(function(b){r.showNotification(b.label,{body:'Sadhana Japa · '+SL.fmt12(b.start),tag:'blk-'+S.today.date+'-'+b.start,icon:'icon.svg',showTrigger:new TimestampTrigger(b.ts)}).catch(function(){})})})}
+  else bl.forEach(function(b){var ms=b.ts-Date.now();if(ms<2147483000)notifTimers.push(setTimeout(function(){showNote(b.label,'Sadhana Japa · '+SL.fmt12(b.start),'blk-'+S.today.date+'-'+b.start)},ms))});
+}
+function renderNotifState(){
+  var st=$('notifState'),btn=$('notifBtn');if(!st)return;
+  if(!('Notification' in window)){st.textContent='This browser doesn’t support notifications here. Install the app from its web address to use them.';btn.disabled=true;return}
+  if(Notification.permission==='denied'){st.textContent='Notifications are blocked for this site. You can allow them in Chrome’s site settings.';btn.textContent='Turn on block reminders';return}
+  var on=S.settings.notify&&Notification.permission==='granted';
+  btn.textContent=on?'Turn off block reminders':'Turn on block reminders';
+  st.textContent=on?(triggersSupported()?'On. Today’s remaining blocks are scheduled.':'On. They fire while the app is open or still running in the background. Keep your Clock alarms for wake-up.'):'Off';
+}
+function blockChimeCheck(){
+  if(!S.settings.chimeBlocks)return;var nm=nowMin();
+  (curPlan().plan||[]).forEach(function(b){var k=S.today.date+b.start;if(SL.toMin(b.start)===nm&&!chimed[k]){chimed[k]=1;chime();toast('🔔 '+b.label)}});
 }
 function curPlan(){var ty=SL.dayType(S.today.date,S.settings.dayTypes);return {type:ty,plan:S.settings.plans[ty]||[]}}
 function nowMin(){var d=new Date();return d.getHours()*60+d.getMinutes()}
@@ -398,9 +677,9 @@ function renderBanner(){
 }
 function tap(ev){
   if(ev&&ev.button>0)return;
-  S.today.counter++;
-  var done=S.today.counter%108===0;
-  if(done){if(S.settings.vibRound)vib([180,90,180]);var p=$('pad');p.classList.add('flash');setTimeout(function(){p.classList.remove('flash')},500);
+  var res=SL.tapBead(S.today,Date.now(),S.paceLog);
+  var done=res.completed;
+  if(done){lastDur=res.dur;lastDoneAt=Date.now();if(S.settings.vibRound)vib([180,90,180]);if(S.settings.chimeRound)chime();var p=$('pad');p.classList.add('flash');setTimeout(function(){p.classList.remove('flash')},500);
     var tot=SL.totalRounds(S.today);toast(tot>=S.today.target?'Round complete. All '+S.today.target+' done today 🙏':'Round complete · '+tot+' of '+S.today.target);}
   else if(S.settings.vibBead)vib(12);
   save();renderJapa();requestWake();
@@ -413,7 +692,7 @@ function renderPlan(){
   $('typeSeg').innerHTML=h;
   $('typeNote').textContent=(ov?'Set by hand for today: ':'Chosen automatically: ')+TYPES[cp.type];
   var st=SL.blockStatus(cp.plan,nowMin()),sorted=cp.plan.map(function(b,i){return [b,i]}).sort(function(a,b){return SL.toMin(a[0].start)-SL.toMin(b[0].start)});
-  $('planList').innerHTML=sorted.map(function(x){var b=x[0],cls=x[1]===st.index?st.state:'';return '<div class="blk '+cls+'"><div class="t">'+SL.fmt12(b.start)+(b.end?' – '+SL.fmt12(b.end):'')+'</div><div>'+esc(b.label)+(cls==='now'?'<span class="tag">now</span>':cls==='next'?'<span class="tag">next</span>':'')+'</div></div>'}).join('')+(st.state==='done'?'<div class="small" style="margin:8px">Today’s plan is done. Rest well 🙏</div>':'');
+  $('planList').innerHTML=sorted.map(function(x){var b=x[0],cls=x[1]===st.index?st.state:'';return '<div class="blk '+cls+'"><div class="t">'+SL.fmt12(b.start)+(b.end?' – '+SL.fmt12(b.end):'')+'</div><div>'+esc(b.label)+(cls==='now'?'<span class="tag">now</span>':cls==='next'?'<span class="tag">next</span>':'')+'</div><a class="btn s acts" target="_blank" rel="noopener" title="Add to Google Calendar" href="'+esc(SL.gcalLink(b,cp.type,S.today.date))+'">📅</a></div>'}).join('')+(st.state==='done'?'<div class="small" style="margin:8px">Today’s plan is done. Rest well 🙏</div>':'');
 }
 
 /* ---------- Holy ---------- */
@@ -453,7 +732,8 @@ function renderHist(){
 
 /* ---------- Settings ---------- */
 function renderSet(){
-  $('sBase').value=S.settings.baseTarget;$('sVibBead').checked=S.settings.vibBead;$('sVibRound').checked=S.settings.vibRound;$('sWake').checked=S.settings.wakeLock;
+  $('sBase').value=S.settings.baseTarget;$('sVibBead').checked=S.settings.vibBead;$('sVibRound').checked=S.settings.vibRound;$('sWake').checked=S.settings.wakeLock;$('sPace').value=String(S.settings.pace);$('sChimeRound').checked=S.settings.chimeRound;$('sChimeBlocks').checked=S.settings.chimeBlocks;
+  $('altarEdit').innerHTML=(S.settings.altarItems||[]).map(function(it,i){return '<div class="hol"><div style="flex:1">'+esc(it)+'</div><button type="button" class="btn s" data-adel="'+i+'">✕</button></div>'}).join('');
   var h='';Object.keys(TYPES).forEach(function(t){h+='<button type="button" data-t="'+t+'" class="'+(t===planEditType?'on':'')+'">'+(t==='weekend'?'Weekend':TYPES[t])+'</button>'});
   $('planEditSeg').innerHTML=h;
   $('planEdit').innerHTML=(S.settings.plans[planEditType]||[]).map(function(b,i){return '<div class="blkedit" data-i="'+i+'"><input type="text" data-f="label" value="'+esc(b.label)+'"><input type="time" data-f="start" value="'+esc(b.start)+'"><input type="time" data-f="end" value="'+esc(b.end)+'"><button type="button" class="btn s" data-del="'+i+'" aria-label="Delete block">✕</button></div>'}).join('');
@@ -485,15 +765,21 @@ function bind(){
   $('pad').addEventListener('contextmenu',function(e){e.preventDefault()});
   $('pad').addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){e.preventDefault();tap()}});
   $('pad').tabIndex=0;
-  $('undo').onclick=function(){if(S.today.counter>0){S.today.counter--;save();renderJapa()}};
+  $('undo').onclick=function(){if(S.today.counter>0){SL.undoBead(S.today,S.paceLog);lastDur=null;save();renderJapa()}};
   $('mPlus').onclick=function(){S.today.morning++;save();renderJapa()};
   $('mMinus').onclick=function(){if(S.today.morning>0){S.today.morning--;save();renderJapa()}};
   $('gitaChk').onchange=function(){S.today.gita=this.checked;save();if(this.checked)toast('Gita study marked 🙏')};
-  function saveBm(){var v=$('bookmark').value.trim();S.bookmark=v;save();renderJapa();if(v)toast('Last read: '+v)}
-  $('bmSave').onclick=saveBm;$('bookmark').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();saveBm();this.blur()}});
-  $('editToday').onclick=function(){var t=S.today;dialog('<b>Edit today ('+nice(t.date)+')</b>'+numField('eM','Morning bead rounds',t.morning)+numField('eC','Counter (total beads tapped today)',t.counter)+numField('eT','Today’s target (rounds)',t.target),function(f){t.morning=intVal(f,'eM',t.morning);t.counter=intVal(f,'eC',t.counter);t.target=Math.max(1,intVal(f,'eT',t.target));save();renderAll();toast('Today updated')})};
+  function saveBm(){var v=$('bookmark').value.trim();S.bookmark=v;S.today.bm=v;save();renderJapa();if(v)toast('Last read: '+v)}
+  $('bmSave').onclick=saveBm;
+  $('studyNote').addEventListener('change',function(){S.today.note=this.value.trim();save()});
+  $('studyNote').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur()}});
+  $('copyObs').onclick=function(){S.today.note=$('studyNote').value.trim();save();var t=S.today,line=SL.mdLine(t.date,{rounds:SL.totalRounds(t),target:t.target,bm:t.bm||S.bookmark,note:t.note});
+    function shown(){$('impText').value=line;toast('Copy failed. The line is in Settings › Backup')}
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(line).then(function(){toast('Copied for Obsidian')},shown);else shown()};
+  $('mdMonth').onclick=function(){var m=calMonth||S.today.date.slice(0,7);shareOrDownload('japa-'+m+'.md',SL.monthMarkdown(S.history,S.today,m),'text/markdown','Japa '+m,function(){toast('Markdown ready')})};$('bookmark').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();saveBm();this.blur()}});
+  $('editToday').onclick=function(){var t=S.today;dialog('<b>Edit today ('+nice(t.date)+')</b>'+numField('eM','Morning bead rounds',t.morning)+numField('eC','Counter (total beads tapped today)',t.counter)+numField('eT','Today’s target (rounds)',t.target),function(f){t.morning=intVal(f,'eM',t.morning);var nc=intVal(f,'eC',t.counter);if(nc!==t.counter){t.counter=nc;t.curStart=null}t.target=Math.max(1,intVal(f,'eT',t.target));save();renderAll();toast('Today updated')})};
   document.querySelectorAll('nav button').forEach(function(b){b.onclick=function(){show(b.dataset.v)}});
-  $('typeSeg').onclick=function(e){var b=e.target.closest('button');if(!b)return;var t=b.dataset.t;if(t==='auto')delete S.settings.dayTypes[S.today.date];else S.settings.dayTypes[S.today.date]=t;save();renderAll()};
+  $('typeSeg').onclick=function(e){var b=e.target.closest('button');if(!b)return;var t=b.dataset.t;if(t==='auto')delete S.settings.dayTypes[S.today.date];else S.settings.dayTypes[S.today.date]=t;save();renderAll();scheduleNotifs()};
   $('calPrev').onclick=function(){var y=+calMonth.slice(0,4),m=+calMonth.slice(5)-1;if(m<1){m=12;y--}calMonth=y+'-'+(m<10?'0':'')+m;renderHist()};
   $('calNext').onclick=function(){var y=+calMonth.slice(0,4),m=+calMonth.slice(5)+1;if(m>12){m=1;y++}calMonth=y+'-'+(m<10?'0':'')+m;renderHist()};
   $('cal').onclick=function(e){var b=e.target.closest('button[data-k]');if(!b)return;var k=b.dataset.k;
@@ -505,8 +791,19 @@ function bind(){
   $('sVibBead').onchange=function(){S.settings.vibBead=this.checked;save();if(this.checked)vib(12)};
   $('sVibRound').onchange=function(){S.settings.vibRound=this.checked;save();if(this.checked)vib([180,90,180])};
   $('sWake').onchange=function(){S.settings.wakeLock=this.checked;save()};
+  $('sPace').onchange=function(){S.settings.pace=this.value==='adaptive'?'adaptive':+this.value;save();renderJapa()};
+  $('sChimeRound').onchange=function(){S.settings.chimeRound=this.checked;save();if(this.checked)chime()};
+  $('sChimeBlocks').onchange=function(){S.settings.chimeBlocks=this.checked;save();if(this.checked)chime()};
+  $('altarAdd').onclick=function(){var v=$('altarNew').value.trim();if(!v)return;S.settings.altarItems.push(v);$('altarNew').value='';save();renderAll()};
+  $('altarEdit').onclick=function(e){var d=e.target.dataset.adel;if(d==null)return;S.settings.altarItems.splice(+d,1);save();renderAll()};
+  $('altarList').onchange=function(e){var i=e.target.dataset.ai;if(i==null)return;var it=S.settings.altarItems[+i];if(e.target.checked)S.today.altar[it]=true;else delete S.today.altar[it];save()};
+  $('icsBtn').onclick=function(){shareOrDownload('sadhana-plan.ics',SL.buildICS(S.settings.plans,S.today.date,S.settings.dayTypes,icsStamp()),'text/calendar','Sadhana plan',function(){toast('Calendar file ready. Open it to import')})};
+  $('notifBtn').onclick=function(){
+    if(!('Notification' in window))return;
+    if(S.settings.notify&&Notification.permission==='granted'){S.settings.notify=false;save();clearNotifs();renderNotifState();return}
+    Notification.requestPermission().then(function(p){S.settings.notify=p==='granted';save();scheduleNotifs();if(p==='granted')toast('Block reminders on')})};
   $('planEditSeg').onclick=function(e){var b=e.target.closest('button');if(!b)return;planEditType=b.dataset.t;renderSet()};
-  $('planEdit').addEventListener('change',function(e){var row=e.target.closest('.blkedit');if(!row||!e.target.dataset.f)return;S.settings.plans[planEditType][+row.dataset.i][e.target.dataset.f]=e.target.value;save();renderJapa();renderPlan()});
+  $('planEdit').addEventListener('change',function(e){var row=e.target.closest('.blkedit');if(!row||!e.target.dataset.f)return;S.settings.plans[planEditType][+row.dataset.i][e.target.dataset.f]=e.target.value;save();renderJapa();renderPlan();scheduleNotifs()});
   $('planEdit').addEventListener('click',function(e){var d=e.target.dataset.del;if(d==null)return;S.settings.plans[planEditType].splice(+d,1);save();renderAll()});
   $('addBlock').onclick=function(){S.settings.plans[planEditType].push({label:'New block',start:'12:00',end:'',kind:'other'});save();renderSet()};
   $('resetPlans').onclick=function(){if(confirm('Restore the default times for all three plans?')){S.settings.plans=SL.defaultPlans();save();renderAll();toast('Default times restored')}};
@@ -520,20 +817,32 @@ function bind(){
     if(b.dataset.hedit!=null){editingHoly=+b.dataset.hedit;fillHolyForm(S.holy[editingHoly]);$('hDate').scrollIntoView({behavior:'smooth',block:'center'})}
     if(b.dataset.hdel!=null&&confirm('Remove '+S.holy[+b.dataset.hdel].name+'?')){S.holy.splice(+b.dataset.hdel,1);editingHoly=-1;save();renderAll()}};
   $('hRestore').onclick=function(){if(confirm('Replace the holy-day list with the bundled ISKCON dates? Your own additions will be removed.')){S.holy=BUNDLED_HOLY.slice();save();renderAll();toast('Bundled dates restored')}};
-  $('expBtn').onclick=function(){var blob=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sadhana-japa-backup-'+todayKey()+'.json';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000);toast('Backup downloaded')};
+  $('expBtn').onclick=exportData;
   $('expCopy').onclick=function(){var j=JSON.stringify(S);$('impText').value=j;if(navigator.clipboard)navigator.clipboard.writeText(j).then(function(){toast('Copied to clipboard')},function(){toast('Shown below. Select and copy it')});else toast('Shown below. Select and copy it')};
   $('impFile').onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){$('impText').value=r.result};r.readAsText(f)};
   $('impBtn').onclick=function(){var o;try{o=JSON.parse($('impText').value)}catch(e){toast('That doesn’t look like a backup');return}
     if(!SL.validImport(o)){toast('That doesn’t look like a backup');return}
     if(!confirm('Replace all data on this phone with this backup?'))return;
-    S=o;if(!S.holy)S.holy=BUNDLED_HOLY.slice();if(!S.settings.plans)S.settings.plans=SL.defaultPlans();if(!S.settings.dayTypes)S.settings.dayTypes={};
+    S=SL.migrate(o);if(!S.holy)S.holy=BUNDLED_HOLY.slice();if(!S.settings.plans)S.settings.plans=SL.defaultPlans();if(!S.settings.dayTypes)S.settings.dayTypes={};
     SL.rollover(S,todayKey());save();renderAll();$('impText').value='';toast('Backup restored 🙏')};
   $('resetCounter').onclick=function(){if(!confirm('Reset today’s bead counter ('+S.today.counter+') to 0?'))return;if(!confirm('Are you sure? This can’t be undone.'))return;S.today.counter=0;save();renderAll();toast('Counter reset')};
   document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'){checkDay();renderJapa();requestWake()}});
+  setInterval(function(){if(!$('v-japa').classList.contains('hide')&&document.visibilityState==='visible')renderSpeed()},1000);
+  setInterval(blockChimeCheck,15000);
   setInterval(function(){checkDay();if(!$('v-japa').classList.contains('hide'))renderNext();if(!$('v-plan').classList.contains('hide'))renderPlan()},20000);
 }
-load();SL.rollover(S,todayKey());save();bind();renderAll();
-if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){navigator.serviceWorker.register('sw.js').catch(function(){});}
+load();SL.rollover(S,todayKey());save();bind();renderAll();scheduleNotifs();
+$('pad').addEventListener('pointerdown',function(){if(S.settings.chimeRound||S.settings.chimeBlocks)audio()},{once:true});
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+  var bar=document.getElementById('updBar'),reloading=false,asked=false;
+  function prompt(w){bar.classList.remove('hide');bar.onclick=function(){bar.textContent='Updating…';asked=true;w.postMessage('skipWaiting')}}
+  navigator.serviceWorker.addEventListener('controllerchange',function(){if(asked&&!reloading){reloading=true;location.reload()}});
+  navigator.serviceWorker.register('sw.js').then(function(reg){
+    if(reg.waiting&&navigator.serviceWorker.controller)prompt(reg.waiting);
+    reg.addEventListener('updatefound',function(){var w=reg.installing;if(!w)return;w.addEventListener('statechange',function(){if(w.state==='installed'&&navigator.serviceWorker.controller)prompt(w)})});
+    document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')reg.update().catch(function(){})});
+  }).catch(function(){});
+}
 })();
 </script>
 </body>

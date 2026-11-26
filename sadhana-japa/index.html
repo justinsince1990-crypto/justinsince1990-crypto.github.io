@@ -272,7 +272,7 @@ var SL = (function () {
   }
   function blankState(today) {
     return {
-      version: 2,
+      version: 2, migrations: { kartikBackfillV1: true },
       paceLog: [], lastExport: null, backupSnooze: null,
       settings: { baseTarget: 16, vibBead: false, vibRound: true, wakeLock: true, pace: 'adaptive', chimeRound: false, chimeBlocks: false, notify: false, altarItems: DEFAULT_ALTAR.slice(), plans: defaultPlans(), dayTypes: { '2026-11-25': 'late', '2026-11-26': 'weekend', '2026-11-27': 'late' } },
       today: newDay(today, 16, 0),
@@ -348,9 +348,34 @@ var SL = (function () {
     res.sort(function (a, b) { return a.days - b.days || (a.kind === 'break' ? -1 : 1); });
     return res;
   }
+  // Kartik 2026 backfill (Oct 26 - Nov 17)
+  var K_EARLY = 'K\u0101rtik early ramp (est. 7\u20139 avg)', K_RAMP = 'K\u0101rtik ramp-up schedule (confirmed)';
+  var NOV17 = { rounds: 14, target: 14, note: 'Complete (confirmed ramp-up schedule: 6 morning + 4 at work + 4 evening)' };
+  function kartikBackfill() {
+    var h = { '2026-10-26': { rounds: 4, target: 4, note: 'K\u0101rtik soft start (confirmed)' } }, k;
+    for (k = '2026-10-27'; k <= '2026-11-07'; k = addDays(k, 1)) h[k] = { rounds: 8, target: 8, note: K_EARLY };
+    for (k = '2026-11-08'; k <= '2026-11-11'; k = addDays(k, 1)) h[k] = { rounds: 10, target: 10, note: K_RAMP };
+    for (k = '2026-11-12'; k <= '2026-11-15'; k = addDays(k, 1)) h[k] = { rounds: 12, target: 12, note: K_RAMP };
+    h['2026-11-16'] = { rounds: 14, target: 14, note: K_RAMP };
+    return h;
+  }
+  // One-time, idempotent: adds missing Oct 26 - Nov 16 days and upgrades the old seeded Nov 17 (10/14). Never touches Nov 18 onward.
+  function applyKartikBackfill(s) {
+    s.migrations = s.migrations || {};
+    if (s.migrations.kartikBackfillV1) return false;
+    var h = s.history = s.history || {}, b = kartikBackfill();
+    Object.keys(b).forEach(function (k) { if (!h[k]) h[k] = b[k]; });
+    var n = h['2026-11-17'];
+    if (!n) h['2026-11-17'] = { rounds: NOV17.rounds, target: NOV17.target, note: NOV17.note };
+    else if (n.rounds === 10) { n.rounds = NOV17.rounds; n.target = NOV17.target; n.note = NOV17.note; }
+    s.migrations.kartikBackfillV1 = true;
+    return true;
+  }
+  function sumRounds(history, from, to) { var t = 0; Object.keys(history || {}).forEach(function (k) { if (k >= from && k <= to) t += history[k].rounds || 0; }); return t; }
   function seedHistory() {
-    var h = {}, d = [['2026-11-17', 10, 14], ['2026-11-18', 16, 16], ['2026-11-19', 16, 16], ['2026-11-20', 16, 16], ['2026-11-21', 16, 16], ['2026-11-22', 10, 16], ['2026-11-23', 22, 22], ['2026-11-24', 16, 16]];
+    var h = kartikBackfill(), d = [['2026-11-18', 16, 16], ['2026-11-19', 16, 16], ['2026-11-20', 16, 16], ['2026-11-21', 16, 16], ['2026-11-22', 10, 16], ['2026-11-23', 22, 22], ['2026-11-24', 16, 16]];
     d.forEach(function (r) { h[r[0]] = { rounds: r[1], target: r[2] }; });
+    h['2026-11-17'] = { rounds: NOV17.rounds, target: NOV17.target, note: NOV17.note };
     return h;
   }
 
@@ -369,6 +394,7 @@ var SL = (function () {
     if (s.lastExport === undefined) s.lastExport = null;
     if (s.backupSnooze === undefined) s.backupSnooze = null;
     if (s.today) { if (!Array.isArray(s.today.rounds)) s.today.rounds = []; if (s.today.curStart === undefined) s.today.curStart = null; if (!s.today.altar || typeof s.today.altar !== 'object') s.today.altar = {}; if (typeof s.today.note !== 'string') s.today.note = ''; if (typeof s.today.bm !== 'string') s.today.bm = ''; }
+    applyKartikBackfill(s);
     if (!s.version || s.version < 2) s.version = 2;
     return s;
   }
@@ -508,7 +534,7 @@ var SL = (function () {
     return L.join('\n') + '\n';
   }
   function validImport(o) { return o && typeof o === 'object' && o.today && o.settings && o.history && typeof o.today.date === 'string'; }
-  return { BEADS: BEADS, dateKey: dateKey, addDays: addDays, daysBetween: daysBetween, weekday: weekday, roundsFromCounter: roundsFromCounter, beadsInRound: beadsInRound, totalRounds: totalRounds, computeCarry: computeCarry, newDay: newDay, blankState: blankState, rollover: rollover, isComplete: isComplete, streak: streak, defaultPlans: defaultPlans, dayType: dayType, toMin: toMin, fmt12: fmt12, blockStatus: blockStatus, nextHoly: nextHoly, seedHistory: seedHistory, validImport: validImport, migrate: migrate, tapBead: tapBead, undoBead: undoBead, paceStats: paceStats, paceMs: paceMs, norm: norm, slowDown: slowDown, curElapsed: curElapsed, eta: eta, fmtDur: fmtDur, holyToday: holyToday, verseIndex: verseIndex, vedabaseUrl: vedabaseUrl, backupDue: backupDue, nextDateOfType: nextDateOfType, gcalLink: gcalLink, buildICS: buildICS, upcomingBlocks: upcomingBlocks, DEFAULT_ALTAR: DEFAULT_ALTAR, mdLine: mdLine, monthMarkdown: monthMarkdown };
+  return { BEADS: BEADS, dateKey: dateKey, addDays: addDays, daysBetween: daysBetween, weekday: weekday, roundsFromCounter: roundsFromCounter, beadsInRound: beadsInRound, totalRounds: totalRounds, computeCarry: computeCarry, newDay: newDay, blankState: blankState, rollover: rollover, isComplete: isComplete, streak: streak, defaultPlans: defaultPlans, dayType: dayType, toMin: toMin, fmt12: fmt12, blockStatus: blockStatus, nextHoly: nextHoly, seedHistory: seedHistory, validImport: validImport, migrate: migrate, tapBead: tapBead, undoBead: undoBead, paceStats: paceStats, paceMs: paceMs, norm: norm, slowDown: slowDown, curElapsed: curElapsed, eta: eta, fmtDur: fmtDur, holyToday: holyToday, verseIndex: verseIndex, vedabaseUrl: vedabaseUrl, backupDue: backupDue, nextDateOfType: nextDateOfType, gcalLink: gcalLink, buildICS: buildICS, upcomingBlocks: upcomingBlocks, DEFAULT_ALTAR: DEFAULT_ALTAR, mdLine: mdLine, kartikBackfill: kartikBackfill, applyKartikBackfill: applyKartikBackfill, sumRounds: sumRounds, monthMarkdown: monthMarkdown };
 })();
 if (typeof module !== 'undefined') module.exports = SL;
 
@@ -715,7 +741,8 @@ function renderHist(){
   var s=SL.streak(S.history,S.today),tot=SL.totalRounds(S.today);
   var msg=s>0?'<b style="font-size:20px;color:var(--gold)">'+s+'</b> day'+(s===1?'':'s')+' in a row with all rounds complete 🌼':'Every round is precious. Today is a fresh start 🌱';
   var all=0;Object.keys(S.history).forEach(function(k){all+=S.history[k].rounds||0});all+=tot;
-  $('streakBox').innerHTML=msg+'<div class="small" style="margin-top:4px">'+all.toLocaleString()+' rounds logged in all.</div>';
+  var kt=SL.sumRounds(S.history,'2026-10-26','2026-11-24');
+  $('streakBox').innerHTML=msg+'<div class="small" style="margin-top:4px">'+all.toLocaleString()+' rounds logged in all.'+(kt?' K\u0101rtik 2026 (Oct 26 \u2013 Nov 24): <b>'+kt+'</b> rounds.':'')+'</div>';
   if(!calMonth)calMonth=S.today.date.slice(0,7);
   var y=+calMonth.slice(0,4),mo=+calMonth.slice(5,7);
   $('calTitle').textContent=MONTHS_L[mo-1]+' '+y;

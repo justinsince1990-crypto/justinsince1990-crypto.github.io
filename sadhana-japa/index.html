@@ -32,8 +32,8 @@ header .d{color:var(--mute);font-size:14px}
 .next{flex:1;font-size:15px}
 .next .lbl{color:var(--mute);font-size:13px}
 .next .what{color:var(--text);font-weight:600}
-.pad{user-select:none;-webkit-user-select:none;touch-action:manipulation;min-height:40vh;border-radius:22px;background:radial-gradient(circle at 50% 40%,#1d3270,#12204a 70%);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:background .08s}
-.pad:active,.pad.hit{background:radial-gradient(circle at 50% 40%,#284189,#152657 70%)}
+.pad{user-select:none;-webkit-user-select:none;touch-action:manipulation;min-height:40vh;border-radius:22px;background:radial-gradient(circle at 50% 40%,var(--padA),var(--padB) 70%);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:background .08s}
+.pad:active,.pad.hit{background:radial-gradient(circle at 50% 40%,var(--padHitA),var(--padHitB) 70%)}
 .pad .beads{font-size:64px;font-weight:300;line-height:1;font-variant-numeric:tabular-nums}
 .pad .beads small{font-size:24px;color:var(--mute)}
 .pad .sub{color:var(--mute);margin-top:10px;font-size:15px}
@@ -47,7 +47,7 @@ header .d{color:var(--mute);font-size:14px}
 .small{font-size:13px;color:var(--mute)}
 .btn{border:1px solid var(--line);background:var(--bg2);border-radius:12px;padding:10px 14px;min-height:44px}
 .btn.s{padding:6px 10px;min-height:36px;font-size:14px}
-.btn.p{background:var(--saf);border-color:var(--saf);color:#1b1205;font-weight:600}
+.btn.p{background:var(--saf);border-color:var(--saf);color:var(--onSaf);font-weight:600}
 .btn.warn{border-color:#6e3a3a;color:#f2b8b8}
 .chk{display:flex;align-items:center;gap:12px;font-size:17px;min-height:44px}
 .chk input{width:26px;height:26px;accent-color:var(--saf)}
@@ -58,7 +58,7 @@ label.f span{display:block;font-size:13px;color:var(--mute);margin-bottom:3px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .seg{display:flex;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
 .seg button{flex:1;border:0;background:none;border-radius:9px;padding:9px 4px;min-height:42px;font-size:14px}
-.seg button.on{background:var(--saf);color:#1b1205;font-weight:600}
+.seg button.on{background:var(--saf);color:var(--onSaf);font-weight:600}
 .blk{display:flex;gap:12px;padding:12px 10px;border-radius:12px;border:1px solid transparent}
 .blk .t{width:150px;flex:none;white-space:nowrap;font-size:14px;color:var(--mute);font-variant-numeric:tabular-nums}
 .blk.now{border-color:var(--saf);background:rgba(244,163,64,.12)}
@@ -79,14 +79,14 @@ label.f span{display:block;font-size:13px;color:var(--mute);margin-bottom:3px}
 .cal .c.part{background:var(--part)}
 .cal .c.today{border-color:var(--saf)}
 .cal .c.empty{background:none}
-nav{position:fixed;left:0;right:0;bottom:0;background:#0a1228;border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--nav);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
 nav .in{display:flex;max-width:560px;width:100%}
 nav button{flex:1;background:none;border:0;padding:10px 2px 12px;color:var(--mute);font-size:12px;min-height:60px}
 nav button i{display:block;font-style:normal;font-size:20px;margin-bottom:2px}
 nav button.on{color:var(--saf2)}
 dialog{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:18px;width:min(92vw,440px);padding:16px}
 dialog::backdrop{background:rgba(0,0,0,.6)}
-.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#24366e;color:var(--text);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none;max-width:90vw;text-align:center}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);color:var(--text);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none;max-width:90vw;text-align:center}
 .toast.on{opacity:1}
 .blkedit{display:grid;grid-template-columns:1.6fr 1fr 1fr auto;gap:6px;margin:6px 0;align-items:center}
 .blkedit input{min-height:38px;padding:6px}
@@ -102,23 +102,54 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
 .verse{font-size:16px;line-height:1.5}
 .verse a{color:var(--saf2)}
 a{color:var(--saf2)}
-.upd{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:var(--saf);color:#1b1205;font-weight:600;border:0;border-radius:999px;padding:10px 18px;z-index:9;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+.upd{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:var(--saf);color:var(--onSaf);font-weight:600;border:0;border-radius:999px;padding:10px 18px;z-index:9;box-shadow:0 4px 16px rgba(0,0,0,.4)}
 .blk .acts{margin-left:auto;flex:none}
+/* v4 themes (dusk = default variables above) */
+:root{--padA:#1d3270;--padB:#12204a;--padHitA:#284189;--padHitB:#152657;--nav:#0a1228;--track:#24366e;--onSaf:#1b1205}
+html[data-theme=day]{--bg:#f7efe1;--bg2:#fff8ec;--card:#fffaf2;--line:#e6d3b3;--text:#2d2216;--mute:#7b6a55;--saf:#c8670f;--saf2:#a4500a;--gold:#a8781c;--gold-bg:rgba(200,150,40,.22);--part:rgba(120,100,70,.12);--padA:#fffdf7;--padB:#f3e3c7;--padHitA:#f6e6c8;--padHitB:#ead2a6;--nav:#fbf3e4;--track:#ead9bb;--onSaf:#fff}
+html[data-theme=oled]{--bg:#000;--bg2:#070302;--card:#050202;--line:#2a1206;--text:#d98a4a;--mute:#8a4d24;--saf:#c2410c;--saf2:#e07a32;--gold:#c9772a;--gold-bg:rgba(201,119,42,.18);--part:rgba(140,60,20,.14);--padA:#0b0402;--padB:#000;--padHitA:#1a0803;--padHitB:#060201;--nav:#000;--track:#1f0d05;--onSaf:#000}
+html[data-theme=oled] .pad .hint,html[data-theme=oled] footer{opacity:.45}
+html[data-theme=oled] img,html[data-theme=oled] .emoji{filter:grayscale(1) sepia(1) hue-rotate(-30deg) brightness(.6)}
+#ringArc{stroke:var(--saf)} #ringArc.done{stroke:var(--gold)} #ringTrack{stroke:var(--track)}
+.themeBtn{background:none;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:13px;color:var(--mute);margin-left:8px}
+.meals{display:flex;gap:8px;margin-top:8px}
+.meal{flex:1;border:1px solid var(--line);background:var(--bg2);border-radius:12px;padding:10px 4px;min-height:48px;font-size:14px}
+.meal.on{background:var(--saf);border-color:var(--saf);color:var(--onSaf);font-weight:600}
+.meal .dot{display:block;font-size:18px;line-height:1}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.badge{border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:13px;color:var(--mute)}
+.badge.got{border-color:var(--gold);color:var(--gold);background:var(--gold-bg)}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.stat b{display:block;font-size:20px;color:var(--saf2);font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--mute)}
+.heat{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin-top:8px}
+.heat i{aspect-ratio:1;border-radius:5px;background:var(--part);display:block}
+.heat i.l1{background:var(--gold-bg);opacity:.5}.heat i.l2{background:var(--gold-bg);opacity:.8}.heat i.l3{background:var(--gold-bg)}.heat i.l4{background:var(--gold)}
+.heat i.t{outline:2px solid var(--saf);outline-offset:1px}
+.mantra{font-size:17px;line-height:1.6;color:var(--saf2);margin:6px 0}
+details.card summary{cursor:pointer;font-weight:600;list-style:none;min-height:28px}
+details.card summary::after{content:' ▾';color:var(--mute)}
+.qa{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
+.qa.done span{text-decoration:line-through;color:var(--mute)}
+.qa input[type=checkbox]{width:24px;height:24px;accent-color:var(--saf)}
+.togo{text-align:center;color:var(--mute);font-size:14px;margin-top:8px}
 footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-size:15px;letter-spacing:.5px}
 .hide{display:none!important}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header><h1>Sadhana Japa</h1><span class="d" id="hdrDate"></span></header>
+  <header><h1>Sadhana Japa</h1><span class="d"><span id="hdrDate"></span><button class="themeBtn" id="themeBtn" type="button" aria-label="Change theme"></button></span></header>
 
   <section id="v-japa">
     <div id="holyBanner" class="banner hide"></div>
     <div id="makeup" class="note hide"></div>
     <div id="dayCards"></div>
+    <input type="text" id="sankalpa" placeholder="🌅 Today’s sankalpa (intention), optional" style="margin:2px 0 8px">
     <div class="top">
       <div class="ring">
-        <svg width="118" height="118" viewBox="0 0 118 118"><circle cx="59" cy="59" r="50" fill="none" stroke="#24366e" stroke-width="10"/><circle id="ringArc" cx="59" cy="59" r="50" fill="none" stroke="#f4a340" stroke-width="10" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"/></svg>
+        <svg width="118" height="118" viewBox="0 0 118 118"><circle id="ringTrack" cx="59" cy="59" r="50" fill="none" stroke-width="10"/><circle id="ringArc" cx="59" cy="59" r="50" fill="none" stroke-width="10" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"/></svg>
         <div class="v"><b id="totNum">0</b><span id="totOf">of 16 rounds</span></div>
       </div>
       <div class="next" id="nextBox"></div>
@@ -128,20 +159,19 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
       <div class="sub" id="padSub">Counter 0 · 0 rounds</div>
       <div class="hint">Tap anywhere here for each bead</div>
     </div>
-    <div class="speed"><div><b id="spNow">–</b><span>this round</span></div><div><b id="spLast">–</b><span>last round</span></div><div><b id="spAvg">–</b><span id="spAvgL">your pace</span></div></div>
-    <div class="slow hide" id="slowNote">That round was quick. Slow down a little and hear each name 🙏</div>
-    <div class="eta" id="eta"></div>
+    <div class="togo"><span id="toGo"></span> · <button class="btn s" id="adjTarget" type="button" style="min-height:30px;padding:3px 10px">🎯 Today’s target</button></div>
     <div class="row">
       <button class="btn s" id="undo" aria-label="Undo one bead">↶ −1 bead</button>
       <div class="step"><span class="small">Morning<br>bead rounds</span><button id="mMinus" aria-label="Minus one morning round">−</button><span class="n" id="mNum">0</span><button id="mPlus" aria-label="Plus one morning round">+</button></div>
     </div>
     <div class="card">
-      <label class="chk"><input type="checkbox" id="gitaChk"> Gita study today</label>
+      <div class="row" style="margin:0"><label class="chk" style="flex:1"><input type="checkbox" id="gitaChk"> Gita study today</label><a class="btn s p" id="openGita" target="_blank" rel="noopener" href="https://vedabase.io/en/library/bg/">📖 Open Gītā</a></div>
       <div class="row" style="margin:6px 0 0"><input type="text" id="bookmark" inputmode="decimal" placeholder="Chapter.verse, e.g. 2.47" style="flex:1"><button class="btn s" id="bmSave">Save</button></div>
       <div class="small" id="lastRead" style="margin-top:6px"></div>
       <input type="text" id="studyNote" placeholder="Study note for today (optional, one line)" style="margin-top:8px">
-      <div style="margin-top:8px"><button class="btn s" id="copyObs" type="button">Copy for Obsidian</button></div>
+      <div class="row" style="margin:8px 0 0;justify-content:flex-start"><button class="btn s" id="copySum" type="button">Copy for Sadhana</button><button class="btn s" id="copyObs" type="button">Copy for Obsidian</button></div>
     </div>
+    <div class="card"><b>Om Tat Sat: meals offered</b><div class="meals" id="meals"></div></div>
     <div class="card"><b>Tulasi &amp; altar</b><div id="altarList"></div></div>
     <div class="card"><div class="verse" id="verse"></div></div>
     <div style="text-align:center"><button class="btn s" id="editToday">Edit today’s numbers</button></div>
@@ -154,12 +184,10 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
       <div class="small" id="typeNote" style="margin-top:6px"></div>
     </div>
     <div id="planList"></div>
-    <div class="small" style="margin:10px 4px">Times can be changed in Settings. Your Google Calendar may already have these blocks, so check before adding them again.</div>
+    <div class="small" style="margin:10px 4px">Times can be changed in Settings.</div>
     <div class="card">
-      <b>Calendar &amp; reminders</b>
-      <p class="small">“📅” adds one block to Google Calendar (repeating weekly for weekday and weekend plans). The .ics file has every weekday and weekend block as weekly events with reminders, plus this week’s late-morning days.</p>
-      <button class="btn" id="icsBtn">Download all as .ics</button>
-      <p class="small" style="margin-top:12px">Block reminders: a notification at each block’s start time. Phones only deliver these reliably while the app is open or recently used, so keep your real alarms in the Clock app. The app can’t set phone alarms.</p>
+      <b>Reminders</b>
+      <p class="small">Block reminders: a notification at each block’s start time. Phones only deliver these reliably while the app is open or recently used, so keep your real alarms in the Clock app. The app can’t set phone alarms.</p>
       <button class="btn" id="notifBtn">Turn on block reminders</button>
       <div class="small" id="notifState" style="margin-top:6px"></div>
     </div>
@@ -173,11 +201,39 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
 
   <section id="v-hist" class="hide">
     <div class="card" id="streakBox"></div>
+    <div class="card"><b>Last 30 days</b><div class="heat" id="heat"></div></div>
+    <div class="card"><b>Milestones</b><div class="badges" id="badges"></div></div>
     <div class="row"><button class="btn s" id="calPrev">‹</button><b id="calTitle"></b><button class="btn s" id="calNext">›</button></div>
     <div class="cal" id="cal"></div>
     <div class="small" id="calSum" style="margin-top:8px"></div>
     <div class="small" style="margin-top:4px">Tap a day to correct it.</div>
     <div style="margin-top:10px"><button class="btn s" id="mdMonth" type="button">Export month as Markdown</button></div>
+    <div class="card" id="monthTotals"></div>
+  </section>
+
+  <section id="v-guide" class="hide">
+    <div class="card">
+      <b>Ask Anjana</b>
+      <div class="small">Questions for your mentor. Saved on this phone and in backups.</div>
+      <div class="row"><input type="text" id="qNew" placeholder="Add a question" style="flex:1"><button class="btn s" id="qAdd" type="button">Add</button></div>
+      <div id="qList"></div>
+    </div>
+    <details class="card" open><summary>Hare Krishna mahā-mantra</summary>
+      <div class="mantra">Hare Kṛṣṇa Hare Kṛṣṇa<br>Kṛṣṇa Kṛṣṇa Hare Hare<br>Hare Rāma Hare Rāma<br>Rāma Rāma Hare Hare</div>
+      <div class="small">Japa: one full mantra per bead, 108 beads to a round.</div></details>
+    <details class="card"><summary>Pañca-tattva mantra</summary>
+      <div class="mantra">(jaya) śrī-kṛṣṇa-caitanya prabhu nityānanda<br>śrī-advaita gadādhara śrīvāsādi-gaura-bhakta-vṛnda</div>
+      <div class="small">Chanted in the morning before japa.</div></details>
+    <details class="card"><summary>Kṛṣṇa praṇāma mantra</summary>
+      <div class="mantra">he kṛṣṇa karuṇā-sindho dīna-bandho jagat-pate<br>gopeśa gopikā-kānta rādhā-kānta namo ’stu te</div>
+      <div class="small">Said while offering obeisances.</div></details>
+    <details class="card"><summary>Morning altar sequence</summary>
+      <ol style="margin:6px 0;padding-left:22px"><li>Wake and shower</li><li>Clean the altar</li><li>Offer obeisances</li><li>Offer water (fresh water cup / ācamana)</li><li>Pañca-tattva mantra and prayers</li><li>Japa: morning rounds</li><li>Bhagavad Gītā study</li></ol>
+      <div class="small">Evening: final rounds, offer obeisances, bed at 10:00 PM. The Dāmodara lamp was daily during Kārtik (through Nov 24).</div></details>
+    <details class="card"><summary>Om Tat Sat: offering a meal</summary>
+      <div style="margin:6px 0">Before eating, place the plate before Kṛṣṇa (or simply hold it with gratitude), offer it with a short prayer, and close with <b>“oṁ tat sat”</b>, dedicating the meal to the Supreme. Then honor it as prasādam.</div>
+      <div class="small">Mark each offered meal on the Japa tab.</div></details>
+    <div class="small" style="margin:8px 4px">From your notes (Altar Sequence, Mantras, Daily Routine). The mantras are the traditional Sanskrit texts. Full texts with phonetics are in Prayers_and_Mantras.pdf in your notes.</div>
   </section>
 
   <section id="v-set" class="hide">
@@ -187,9 +243,14 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
       <label class="chk"><input type="checkbox" id="sVibBead"> Short buzz on every bead</label>
       <label class="chk"><input type="checkbox" id="sVibRound"> Longer buzz at each round</label>
       <label class="chk"><input type="checkbox" id="sWake"> Keep screen on while counting</label>
-      <label class="f"><span>Round pace for estimates</span><select id="sPace"><option value="adaptive">Adaptive (learns from your rounds)</option><option value="6">6 min</option><option value="7">7 min</option><option value="8">8 min</option><option value="9">9 min</option><option value="10">10 min</option><option value="12">12 min</option><option value="15">15 min</option></select></label>
       <label class="chk"><input type="checkbox" id="sChimeRound"> Soft bell at each completed round</label>
       <label class="chk"><input type="checkbox" id="sChimeBlocks"> Soft bell when a plan block starts (while the app is open)</label>
+    </div>
+    <div class="card">
+      <b>Look &amp; Gītā</b>
+      <label class="f"><span>Theme</span><select id="sTheme"><option value="auto">Auto (Daylight 7 AM, Dusk 5 PM, OLED black 9 PM)</option><option value="day">Warm Daylight</option><option value="dusk">Dusk</option><option value="oled">OLED Pitch Black (red/amber, low glare)</option></select></label>
+      <label class="f"><span>“Open Gītā” goes to</span><select id="sGita"><option value="vedabase">Vedabase at my bookmark</option><option value="readera">ReadEra app</option><option value="custom">Custom link</option></select></label>
+      <label class="f" id="sGitaUrlWrap"><span>Custom link ({ch} and {v} are filled from your bookmark)</span><input type="text" id="sGitaUrl" placeholder="https://…/{ch}/{v}/"></label>
     </div>
     <div class="card">
       <b>Tulasi &amp; altar checklist</b>
@@ -220,6 +281,14 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
       <div id="holyEdit" style="max-height:320px;overflow:auto"></div>
       <div class="row"><button class="btn s" id="hRestore">Restore bundled dates</button></div>
     </div>
+    <details class="card">
+      <summary>Calendar export (advanced)</summary>
+      <p class="small">Schedule bot already keeps your practice calendar, so only use these if you need a block that isn’t there yet. The app can’t set phone alarms.</p>
+      <div class="seg" id="calSeg" style="margin:8px 0"></div>
+      <div id="calLinks"></div>
+      <p class="small">The .ics file has every weekday and weekend block as weekly events with reminders, plus upcoming special days.</p>
+      <button class="btn" id="icsBtn" type="button">Download all as .ics</button>
+    </details>
     <div class="card">
       <b>Backup</b>
       <div class="row"><button class="btn" id="expBtn">Export backup file</button><button class="btn" id="expCopy">Copy JSON</button></div>
@@ -241,6 +310,7 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
   <button data-v="plan"><i>🕰️</i>Plan</button>
   <button data-v="holy"><i>🪔</i>Holy days</button>
   <button data-v="hist"><i>🌼</i>History</button>
+  <button data-v="guide"><i>📖</i>Guide</button>
   <button data-v="set"><i>⚙️</i>Settings</button>
 </div></nav>
 
@@ -268,13 +338,13 @@ var SL = (function () {
     return Math.min(s, base);
   }
   function newDay(date, base, carry) {
-    return { date: date, counter: 0, morning: 0, carry: carry || 0, target: base + (carry || 0), gita: false, rounds: [], curStart: null, altar: {}, note: '', bm: '' };
+    return { date: date, counter: 0, morning: 0, carry: carry || 0, target: base + (carry || 0), gita: false, rounds: [], curStart: null, altar: {}, note: '', bm: '', meals: {}, sankalpa: '', override: false };
   }
   function blankState(today) {
     return {
-      version: 2, migrations: { kartikBackfillV1: true },
+      version: 4, migrations: { kartikBackfillV1: true }, anjana: [],
       paceLog: [], lastExport: null, backupSnooze: null,
-      settings: { baseTarget: 16, vibBead: false, vibRound: true, wakeLock: true, pace: 'adaptive', chimeRound: false, chimeBlocks: false, notify: false, altarItems: DEFAULT_ALTAR.slice(), plans: defaultPlans(), dayTypes: { '2026-11-25': 'late', '2026-11-26': 'weekend', '2026-11-27': 'late' } },
+      settings: { baseTarget: 16, vibBead: false, vibRound: true, wakeLock: true, theme: 'auto', gitaTarget: 'vedabase', gitaCustomUrl: '', pace: 'adaptive', chimeRound: false, chimeBlocks: false, notify: false, altarItems: DEFAULT_ALTAR.slice(), plans: defaultPlans(), dayTypes: { '2026-11-25': 'late', '2026-11-26': 'weekend', '2026-11-27': 'late' } },
       today: newDay(today, 16, 0),
       history: {},
       bookmark: '',
@@ -288,9 +358,9 @@ var SL = (function () {
     if (daysBetween(t.date, todayKey) < 0) return false; // clock went backwards: leave data alone
     var total = totalRounds(t);
     var items = state.settings.altarItems || [], done = items.filter(function (it) { return t.altar && t.altar[it]; }).length;
-    state.history[t.date] = { rounds: total, target: t.target, gita: !!t.gita, morning: t.morning, counter: t.counter, note: t.note || '', bm: t.bm || '', altar: { done: done, of: items.length, items: items.filter(function (it) { return t.altar && t.altar[it]; }) } };
+    state.history[t.date] = { rounds: total, target: t.target, gita: !!t.gita, morning: t.morning, counter: t.counter, note: t.note || '', bm: t.bm || '', sankalpa: t.sankalpa || '', meals: { b: !!(t.meals && t.meals.b), l: !!(t.meals && t.meals.l), d: !!(t.meals && t.meals.d) }, override: !!t.override, altar: { done: done, of: items.length, items: items.filter(function (it) { return t.altar && t.altar[it]; }) } };
     var gap = daysBetween(t.date, todayKey);
-    var carry = gap === 1 ? computeCarry(t.target, total, base) : 0; // never more than one day back
+    var carry = (gap === 1 && !t.override) ? computeCarry(t.target, total, base) : 0; // never more than one day back; a one-day target override never carries
     state.today = newDay(todayKey, base, carry);
     return true;
   }
@@ -386,6 +456,8 @@ var SL = (function () {
     function def(o, k, v) { if (o[k] === undefined || o[k] === null) o[k] = v; }
     def(st, 'baseTarget', 16); def(st, 'vibBead', false); def(st, 'vibRound', true); def(st, 'wakeLock', true);
     def(st, 'pace', 'adaptive'); def(st, 'chimeRound', false); def(st, 'chimeBlocks', false); def(st, 'notify', false);
+    def(st, 'theme', 'auto'); def(st, 'gitaTarget', 'vedabase'); def(st, 'gitaCustomUrl', '');
+    if (!Array.isArray(s.anjana)) s.anjana = [];
     if (!Array.isArray(st.altarItems)) st.altarItems = DEFAULT_ALTAR.slice();
     if (!st.plans) st.plans = defaultPlans();
     if (!st.dayTypes) st.dayTypes = {};
@@ -393,9 +465,9 @@ var SL = (function () {
     if (!Array.isArray(s.paceLog)) s.paceLog = [];
     if (s.lastExport === undefined) s.lastExport = null;
     if (s.backupSnooze === undefined) s.backupSnooze = null;
-    if (s.today) { if (!Array.isArray(s.today.rounds)) s.today.rounds = []; if (s.today.curStart === undefined) s.today.curStart = null; if (!s.today.altar || typeof s.today.altar !== 'object') s.today.altar = {}; if (typeof s.today.note !== 'string') s.today.note = ''; if (typeof s.today.bm !== 'string') s.today.bm = ''; }
+    if (s.today) { if (!Array.isArray(s.today.rounds)) s.today.rounds = []; if (s.today.curStart === undefined) s.today.curStart = null; if (!s.today.altar || typeof s.today.altar !== 'object') s.today.altar = {}; if (typeof s.today.note !== 'string') s.today.note = ''; if (typeof s.today.bm !== 'string') s.today.bm = ''; if (!s.today.meals || typeof s.today.meals !== 'object') s.today.meals = {}; if (typeof s.today.sankalpa !== 'string') s.today.sankalpa = ''; if (typeof s.today.override !== 'boolean') s.today.override = false; }
     applyKartikBackfill(s);
-    if (!s.version || s.version < 2) s.version = 2;
+    if (!s.version || s.version < 4) s.version = 4;
     return s;
   }
   // ---- v2: round timing ----
@@ -520,6 +592,7 @@ var SL = (function () {
     var parts = ['- ' + key];
     if (rec.bm) parts.push('Gita [[BG ' + rec.bm + ']]');
     parts.push('rounds ' + rec.rounds + '/' + rec.target);
+    if (rec.sankalpa) parts.push('sankalpa: ' + String(rec.sankalpa).replace(/[\r\n]+/g, ' '));
     if (rec.note) parts.push('note: ' + String(rec.note).replace(/[\r\n]+/g, ' '));
     return parts.join(' · ');
   }
@@ -527,14 +600,72 @@ var SL = (function () {
     var L = ['# Japa & Gita: ' + month, ''], keys = Object.keys(history).filter(function (k) { return k.slice(0, 7) === month; });
     if (today && today.date.slice(0, 7) === month && keys.indexOf(today.date) < 0) keys.push(today.date);
     keys.sort().forEach(function (k) {
-      var r = (today && k === today.date) ? { rounds: totalRounds(today), target: today.target, bm: today.bm, note: today.note } : history[k];
+      var r = (today && k === today.date) ? { rounds: totalRounds(today), target: today.target, bm: today.bm, note: today.note, sankalpa: today.sankalpa } : history[k];
       L.push(mdLine(k, r));
     });
     if (keys.length === 0) L.push('_No days logged._');
     return L.join('\n') + '\n';
   }
+
+  // ---- v4 ----
+  var WDN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function niceKey(k) { var p = k.split('-'); return WDN[weekday(k)] + ' ' + MON[+p[1] - 1] + ' ' + (+p[2]); }
+  // "Thu Nov 26: 16/16 rounds (8 morning + 8 counter) · Gītā 2.13"
+  function dailySummary(day, bm) {
+    var c = roundsFromCounter(day.counter || 0), s = niceKey(day.date) + ': ' + totalRounds(day) + '/' + day.target + ' rounds (' + (day.morning || 0) + ' morning + ' + c + ' counter)';
+    if (bm) s += ' · G\u012bt\u0101 ' + bm;
+    return s;
+  }
+  function themeFor(setting, hour) {
+    if (setting === 'day' || setting === 'dusk' || setting === 'oled') return setting;
+    if (hour >= 21 || hour < 7) return 'oled';
+    if (hour >= 17) return 'dusk';
+    return 'day';
+  }
+  var READERA = 'intent://#Intent;package=org.readera;S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=org.readera') + ';end';
+  function parseBm(bm) { var m = /^\s*(\d{1,2})\s*[.:]\s*(\d{1,3})/.exec(bm || ''); return m && +m[1] >= 1 && +m[1] <= 18 ? { ch: +m[1], v: +m[2] } : null; }
+  function gitaUrl(settings, bm) {
+    var p = parseBm(bm), t = settings && settings.gitaTarget;
+    if (t === 'readera') return READERA;
+    if (t === 'custom' && settings.gitaCustomUrl) {
+      return settings.gitaCustomUrl.replace(/\{ch\}/g, p ? p.ch : '').replace(/\{v\}/g, p ? p.v : '');
+    }
+    return p ? vedabaseUrl(p.ch, p.v) : 'https://vedabase.io/en/library/bg/';
+  }
+  function allDays(history, today) {
+    var d = {}; Object.keys(history || {}).forEach(function (k) { d[k] = history[k]; });
+    if (today) d[today.date] = { rounds: totalRounds(today), target: today.target };
+    return d;
+  }
+  function stats(history, today, ekadashiDates) {
+    var d = allDays(history, today), keys = Object.keys(d).sort(), life = 0, longest = 0, run = 0, prev = null, months = {}, first16 = null;
+    keys.forEach(function (k) {
+      var r = d[k]; life += r.rounds || 0; months[k.slice(0, 7)] = (months[k.slice(0, 7)] || 0) + (r.rounds || 0);
+      if (!first16 && r.rounds >= 16) first16 = k;
+      if (isComplete(r)) { run = (prev && daysBetween(prev, k) === 1 && run > 0) ? run + 1 : 1; } else run = 0;
+      if (run > longest) longest = run; prev = k;
+    });
+    var kartik = sumRounds(d, '2026-10-26', '2026-11-24'), kDays = 0;
+    for (var k = '2026-10-26'; k <= '2026-11-24'; k = addDays(k, 1)) if (d[k] && d[k].rounds > 0) kDays++;
+    var ek = (ekadashiDates || []).filter(function (x) { return d[x] && isComplete(d[x]); });
+    var cur = streak(history || {}, today);
+    var badges = [
+      { id: 'first16', name: 'First 16-round day', got: !!first16, when: first16 },
+      { id: 'kartik', name: 'K\u0101rtik 2026 Finisher', got: kDays === 30, when: kDays === 30 ? '2026-11-24' : null },
+      { id: 'ekadashi', name: 'Ekadashi complete', got: ek.length > 0, when: ek[0] || null },
+      { id: 'streak7', name: '7-day streak', got: longest >= 7 },
+      { id: 'r500', name: '500 lifetime rounds', got: life >= 500 },
+      { id: 'r1000', name: '1,000 lifetime rounds', got: life >= 1000 }
+    ];
+    return { lifetime: life, mantras: life * BEADS, current: cur, longest: Math.max(longest, cur), months: months, kartik: kartik, kartikDays: kDays, badges: badges };
+  }
+  function heat(history, today, n) {
+    var d = allDays(history, today), out = [];
+    for (var i = n - 1; i >= 0; i--) { var k = addDays(today.date, -i), r = d[k]; out.push({ date: k, rounds: r ? r.rounds : 0, target: r ? r.target : 0, level: !r || !r.target ? 0 : r.rounds >= r.target ? 4 : Math.max(1, Math.min(3, Math.ceil(3 * r.rounds / r.target))) }); }
+    return out;
+  }
   function validImport(o) { return o && typeof o === 'object' && o.today && o.settings && o.history && typeof o.today.date === 'string'; }
-  return { BEADS: BEADS, dateKey: dateKey, addDays: addDays, daysBetween: daysBetween, weekday: weekday, roundsFromCounter: roundsFromCounter, beadsInRound: beadsInRound, totalRounds: totalRounds, computeCarry: computeCarry, newDay: newDay, blankState: blankState, rollover: rollover, isComplete: isComplete, streak: streak, defaultPlans: defaultPlans, dayType: dayType, toMin: toMin, fmt12: fmt12, blockStatus: blockStatus, nextHoly: nextHoly, seedHistory: seedHistory, validImport: validImport, migrate: migrate, tapBead: tapBead, undoBead: undoBead, paceStats: paceStats, paceMs: paceMs, norm: norm, slowDown: slowDown, curElapsed: curElapsed, eta: eta, fmtDur: fmtDur, holyToday: holyToday, verseIndex: verseIndex, vedabaseUrl: vedabaseUrl, backupDue: backupDue, nextDateOfType: nextDateOfType, gcalLink: gcalLink, buildICS: buildICS, upcomingBlocks: upcomingBlocks, DEFAULT_ALTAR: DEFAULT_ALTAR, mdLine: mdLine, kartikBackfill: kartikBackfill, applyKartikBackfill: applyKartikBackfill, sumRounds: sumRounds, monthMarkdown: monthMarkdown };
+  return { BEADS: BEADS, dateKey: dateKey, addDays: addDays, daysBetween: daysBetween, weekday: weekday, roundsFromCounter: roundsFromCounter, beadsInRound: beadsInRound, totalRounds: totalRounds, computeCarry: computeCarry, newDay: newDay, blankState: blankState, rollover: rollover, isComplete: isComplete, streak: streak, defaultPlans: defaultPlans, dayType: dayType, toMin: toMin, fmt12: fmt12, blockStatus: blockStatus, nextHoly: nextHoly, seedHistory: seedHistory, validImport: validImport, migrate: migrate, tapBead: tapBead, undoBead: undoBead, paceStats: paceStats, paceMs: paceMs, norm: norm, slowDown: slowDown, curElapsed: curElapsed, eta: eta, fmtDur: fmtDur, holyToday: holyToday, verseIndex: verseIndex, vedabaseUrl: vedabaseUrl, backupDue: backupDue, nextDateOfType: nextDateOfType, gcalLink: gcalLink, buildICS: buildICS, upcomingBlocks: upcomingBlocks, DEFAULT_ALTAR: DEFAULT_ALTAR, mdLine: mdLine, dailySummary: dailySummary, themeFor: themeFor, gitaUrl: gitaUrl, parseBm: parseBm, stats: stats, heat: heat, niceKey: niceKey, kartikBackfill: kartikBackfill, applyKartikBackfill: applyKartikBackfill, sumRounds: sumRounds, monthMarkdown: monthMarkdown };
 })();
 if (typeof module !== 'undefined') module.exports = SL;
 
@@ -546,7 +677,7 @@ const GITA_VERSES = [[2,7],[2,12],[2,13],[2,14],[2,20],[2,22],[2,23],[2,27],[2,4
 (function(){
 'use strict';
 var KEY='sadhanaJapa.v1', $=function(id){return document.getElementById(id)};
-var S, wakeLock=null, actx=null, notifTimers=[], chimed={}, lastDur=null, lastDoneAt=0, calMonth=null, planEditType='weekday', editingHoly=-1;
+var S, calType='weekday', wakeLock=null, actx=null, notifTimers=[], chimed={}, lastDur=null, lastDoneAt=0, calMonth=null, planEditType='weekday', editingHoly=-1;
 var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var MONTHS_L=['January','February','March','April','May','June','July','August','September','October','November','December'];
 var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -588,35 +719,44 @@ function renderJapa(){
   $('totOf').textContent='of '+tg+' rounds';
   var frac=tg>0?Math.min(1,tot/tg):0;
   $('ringArc').setAttribute('stroke-dashoffset',(314.16*(1-frac)).toFixed(1));
-  $('ringArc').setAttribute('stroke',tot>=tg?'#e7c26a':'#f4a340');
+  $('ringArc').classList.toggle('done',tot>=tg&&tg>0);
   $('beadNum').textContent=SL.beadsInRound(t.counter);
   var cr=SL.roundsFromCounter(t.counter);
   $('padSub').textContent='Counter '+t.counter.toLocaleString()+' · '+cr+' round'+(cr===1?'':'s');
   $('mNum').textContent=t.morning;
-  var mk=tg-base;
+  var mk=t.override?0:tg-base;
   if(mk>0){$('makeup').textContent='Includes +'+mk+' makeup from yesterday. Gently, no rush.';$('makeup').classList.remove('hide')}else $('makeup').classList.add('hide');
   if(tot>=tg&&tg>0){$('makeup').textContent='All '+tg+' rounds complete today. Hare Krishna 🙏';$('makeup').classList.remove('hide')}
   $('gitaChk').checked=!!t.gita;
   if(document.activeElement!==$('bookmark'))$('bookmark').value=S.bookmark||'';
   if(document.activeElement!==$('studyNote'))$('studyNote').value=t.note||'';
   $('lastRead').textContent=S.bookmark?'Last read: '+S.bookmark:'No bookmark yet';
-  renderNext();renderBanner();renderSpeed();renderDayCards();renderAltar();renderVerse();
+  renderNext();renderBanner();renderToday4();renderDayCards();renderAltar();renderVerse();
 }
-/* ---------- v2: round speed ---------- */
-function renderSpeed(){
-  var now=Date.now(),t=S.today,st=SL.paceStats(S.paceLog),el=SL.curElapsed(t,now),fixed=S.settings.pace!=='adaptive';
-  $('spNow').textContent=el!=null?SL.fmtDur(el):'–';
-  var lr=null;for(var i=t.rounds.length-1;i>=0;i--){if(t.rounds[i].s){lr=t.rounds[i].e-t.rounds[i].s;break}}
-  $('spLast').textContent=lr!=null?SL.fmtDur(lr):'–';
-  var pace=SL.paceMs(S.settings.pace,st);
-  $('spAvg').textContent=SL.fmtDur(pace);
-  $('spAvgL').textContent=fixed?'target pace':st.n>=3?'avg of last '+st.n:'pace (10 min to start)';
-  var showSlow=lastDur!=null&&SL.slowDown(lastDur,st)&&now-lastDoneAt<4*60000;
-  $('slowNote').classList.toggle('hide',!showSlow);
-  var left=t.target-SL.totalRounds(t),fin=SL.eta(left,pace,el,now);
-  if(fin){var d=new Date(fin),hm=(d.getHours()<10?'0':'')+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes(),nextDay=SL.dateKey(d)!==t.date;
-    $('eta').textContent=left+' left, done about '+SL.fmt12(hm)+(nextDay?' (after midnight)':'')+' at this pace';}
-  else $('eta').textContent=t.target>0?'All rounds done for today 🙏':'';
+/* ---------- v4: today extras ---------- */
+function renderToday4(){
+  var t=S.today,left=t.target-SL.totalRounds(t),base=S.settings.baseTarget;
+  $('toGo').textContent=left>0?left+' round'+(left===1?'':'s')+' to go':'All rounds done 🙏';
+  $('adjTarget').textContent=t.override?'🎯 Today only: '+t.target+' (usual '+base+')':'🎯 Today’s target';
+  if(document.activeElement!==$('sankalpa'))$('sankalpa').value=t.sankalpa||'';
+  var m=t.meals||{};
+  $('meals').innerHTML=[['b','Breakfast'],['l','Lunch'],['d','Dinner']].map(function(x){return '<button type="button" class="meal'+(m[x[0]]?' on':'')+'" data-meal="'+x[0]+'"><span class="dot">'+(m[x[0]]?'●':'○')+'</span>'+x[1]+'</button>'}).join('');
+  $('openGita').href=SL.gitaUrl(S.settings,S.bookmark);
+  $('openGita').target=S.settings.gitaTarget==='readera'?'_self':'_blank';
+}
+function applyTheme(){
+  var th=SL.themeFor(S.settings.theme,new Date().getHours());
+  document.documentElement.setAttribute('data-theme',th);
+  var meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content=th==='day'?'#f7efe1':th==='oled'?'#000000':'#0b1530';
+  var b=$('themeBtn');if(b)b.textContent=(S.settings.theme==='auto'?'Auto · ':'')+({day:'☀️ Day',dusk:'🌆 Dusk',oled:'🌑 OLED'})[th];
+}
+function renderGuide(){
+  var q=S.anjana||[];
+  $('qList').innerHTML=q.map(function(x,i){return '<div class="qa'+(x.done?' done':'')+'"><input type="checkbox" data-q="'+i+'"'+(x.done?' checked':'')+'><span style="flex:1">'+esc(x.text)+'</span><span class="small">'+esc(x.added?nice(x.added):'')+'</span><button type="button" class="btn s" data-qdel="'+i+'">✕</button></div>'}).join('')||'<div class="small" style="margin-top:6px">No questions yet.</div>';
+}
+function copyText(text,okMsg){
+  function shown(){$('impText').value=text;toast('Copy failed. The text is in Settings › Backup')}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(function(){toast(okMsg)},shown);else shown();
 }
 /* ---------- v2: chime ---------- */
 function audio(){try{if(!actx){var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;actx=new C()}if(actx.state==='suspended')actx.resume();return actx}catch(e){return null}}
@@ -705,7 +845,7 @@ function tap(ev){
   if(ev&&ev.button>0)return;
   var res=SL.tapBead(S.today,Date.now(),S.paceLog);
   var done=res.completed;
-  if(done){lastDur=res.dur;lastDoneAt=Date.now();if(S.settings.vibRound)vib([180,90,180]);if(S.settings.chimeRound)chime();var p=$('pad');p.classList.add('flash');setTimeout(function(){p.classList.remove('flash')},500);
+  if(done){if(S.settings.vibRound)vib([180,90,180]);if(S.settings.chimeRound)chime();var p=$('pad');p.classList.add('flash');setTimeout(function(){p.classList.remove('flash')},500);
     var tot=SL.totalRounds(S.today);toast(tot>=S.today.target?'Round complete. All '+S.today.target+' done today 🙏':'Round complete · '+tot+' of '+S.today.target);}
   else if(S.settings.vibBead)vib(12);
   save();renderJapa();requestWake();
@@ -718,7 +858,7 @@ function renderPlan(){
   $('typeSeg').innerHTML=h;
   $('typeNote').textContent=(ov?'Set by hand for today: ':'Chosen automatically: ')+TYPES[cp.type];
   var st=SL.blockStatus(cp.plan,nowMin()),sorted=cp.plan.map(function(b,i){return [b,i]}).sort(function(a,b){return SL.toMin(a[0].start)-SL.toMin(b[0].start)});
-  $('planList').innerHTML=sorted.map(function(x){var b=x[0],cls=x[1]===st.index?st.state:'';return '<div class="blk '+cls+'"><div class="t">'+SL.fmt12(b.start)+(b.end?' – '+SL.fmt12(b.end):'')+'</div><div>'+esc(b.label)+(cls==='now'?'<span class="tag">now</span>':cls==='next'?'<span class="tag">next</span>':'')+'</div><a class="btn s acts" target="_blank" rel="noopener" title="Add to Google Calendar" href="'+esc(SL.gcalLink(b,cp.type,S.today.date))+'">📅</a></div>'}).join('')+(st.state==='done'?'<div class="small" style="margin:8px">Today’s plan is done. Rest well 🙏</div>':'');
+  $('planList').innerHTML=sorted.map(function(x){var b=x[0],cls=x[1]===st.index?st.state:'';return '<div class="blk '+cls+'"><div class="t">'+SL.fmt12(b.start)+(b.end?' – '+SL.fmt12(b.end):'')+'</div><div>'+esc(b.label)+(cls==='now'?'<span class="tag">now</span>':cls==='next'?'<span class="tag">next</span>':'')+'</div></div>'}).join('')+(st.state==='done'?'<div class="small" style="margin:8px">Today’s plan is done. Rest well 🙏</div>':'');
 }
 
 /* ---------- Holy ---------- */
@@ -741,8 +881,18 @@ function renderHist(){
   var s=SL.streak(S.history,S.today),tot=SL.totalRounds(S.today);
   var msg=s>0?'<b style="font-size:20px;color:var(--gold)">'+s+'</b> day'+(s===1?'':'s')+' in a row with all rounds complete 🌼':'Every round is precious. Today is a fresh start 🌱';
   var all=0;Object.keys(S.history).forEach(function(k){all+=S.history[k].rounds||0});all+=tot;
-  var kt=SL.sumRounds(S.history,'2026-10-26','2026-11-24');
-  $('streakBox').innerHTML=msg+'<div class="small" style="margin-top:4px">'+all.toLocaleString()+' rounds logged in all.'+(kt?' K\u0101rtik 2026 (Oct 26 \u2013 Nov 24): <b>'+kt+'</b> rounds.':'')+'</div>';
+  var ek=S.holy.filter(function(e){return e.type==='ekadashi'}).map(function(e){return e.date}).concat(['2026-11-20']);
+  var st=SL.stats(S.history,S.today,ek);
+  $('streakBox').innerHTML=msg+'<div class="statgrid" style="margin-top:10px">'+
+    '<div class="stat"><b>'+st.lifetime.toLocaleString()+'</b><span>lifetime rounds</span></div>'+
+    '<div class="stat"><b>'+st.mantras.toLocaleString()+'</b><span>mahā-mantras chanted</span></div>'+
+    '<div class="stat"><b>'+st.current+'</b><span>current streak (days)</span></div>'+
+    '<div class="stat"><b>'+st.longest+'</b><span>longest streak</span></div></div>'+
+    (st.kartik?'<div class="banner" style="margin:10px 0 0">🪔 K\u0101rtik 2026 (Oct 26 \u2013 Nov 24): <b>'+st.kartik+'</b> rounds over '+st.kartikDays+' days</div>':'');
+  $('heat').innerHTML=SL.heat(S.history,S.today,30).map(function(c){return '<i class="l'+c.level+(c.date===S.today.date?' t':'')+'" title="'+c.date+': '+c.rounds+'/'+c.target+'"></i>'}).join('');
+  $('badges').innerHTML=st.badges.map(function(b){return '<span class="badge'+(b.got?' got':'')+'">'+(b.got?'🏅 ':'○ ')+esc(b.name)+'</span>'}).join('');
+  var ms=Object.keys(st.months).sort().reverse();
+  $('monthTotals').innerHTML='<b>Monthly totals</b>'+ms.map(function(m){return '<div class="hol"><div style="flex:1">'+MONTHS_L[+m.slice(5)-1]+' '+m.slice(0,4)+'</div><b>'+st.months[m]+'</b></div>'}).join('');
   if(!calMonth)calMonth=S.today.date.slice(0,7);
   var y=+calMonth.slice(0,4),mo=+calMonth.slice(5,7);
   $('calTitle').textContent=MONTHS_L[mo-1]+' '+y;
@@ -759,11 +909,14 @@ function renderHist(){
 
 /* ---------- Settings ---------- */
 function renderSet(){
-  $('sBase').value=S.settings.baseTarget;$('sVibBead').checked=S.settings.vibBead;$('sVibRound').checked=S.settings.vibRound;$('sWake').checked=S.settings.wakeLock;$('sPace').value=String(S.settings.pace);$('sChimeRound').checked=S.settings.chimeRound;$('sChimeBlocks').checked=S.settings.chimeBlocks;
+  $('sBase').value=S.settings.baseTarget;$('sVibBead').checked=S.settings.vibBead;$('sVibRound').checked=S.settings.vibRound;$('sWake').checked=S.settings.wakeLock;$('sTheme').value=S.settings.theme;$('sGita').value=S.settings.gitaTarget;$('sGitaUrl').value=S.settings.gitaCustomUrl||'';$('sGitaUrlWrap').classList.toggle('hide',S.settings.gitaTarget!=='custom');$('sChimeRound').checked=S.settings.chimeRound;$('sChimeBlocks').checked=S.settings.chimeBlocks;
   $('altarEdit').innerHTML=(S.settings.altarItems||[]).map(function(it,i){return '<div class="hol"><div style="flex:1">'+esc(it)+'</div><button type="button" class="btn s" data-adel="'+i+'">✕</button></div>'}).join('');
   var h='';Object.keys(TYPES).forEach(function(t){h+='<button type="button" data-t="'+t+'" class="'+(t===planEditType?'on':'')+'">'+(t==='weekend'?'Weekend':TYPES[t])+'</button>'});
   $('planEditSeg').innerHTML=h;
   $('planEdit').innerHTML=(S.settings.plans[planEditType]||[]).map(function(b,i){return '<div class="blkedit" data-i="'+i+'"><input type="text" data-f="label" value="'+esc(b.label)+'"><input type="time" data-f="start" value="'+esc(b.start)+'"><input type="time" data-f="end" value="'+esc(b.end)+'"><button type="button" class="btn s" data-del="'+i+'" aria-label="Delete block">✕</button></div>'}).join('');
+  var ch='';['weekday','late','weekend'].forEach(function(t){ch+='<button type="button" data-t="'+t+'" class="'+(t===calType?'on':'')+'">'+(t==='weekend'?'Weekend':TYPES[t])+'</button>'});$('calSeg').innerHTML=ch;
+  var ck=SL.nextDateOfType(calType,S.today.date,S.settings.dayTypes);
+  $('calLinks').innerHTML=(S.settings.plans[calType]||[]).map(function(b){return '<div class="hol"><div class="dt">'+SL.fmt12(b.start)+'</div><div style="flex:1">'+esc(b.label)+'</div><a class="btn s" target="_blank" rel="noopener" href="'+esc(SL.gcalLink(b,calType,ck))+'">📅 Add</a></div>'}).join('');
   var list=S.holy.map(function(e,i){return [e,i]}).sort(function(a,b){return a[0].date<b[0].date?-1:1});
   $('holyEdit').innerHTML=list.map(function(x){var e=x[0];return '<div class="hol"><div class="dt">'+esc(e.date)+'</div><div style="flex:1">'+esc(e.name)+'</div><button type="button" class="btn s" data-hedit="'+x[1]+'">Edit</button><button type="button" class="btn s" data-hdel="'+x[1]+'">✕</button></div>'}).join('');
 }
@@ -779,9 +932,9 @@ function dialog(html,onOk){
 function numField(id,label,v){return '<label class="f"><span>'+label+'</span><input type="number" min="0" id="'+id+'" value="'+v+'"></label>'}
 function intVal(f,id,fallback){var v=parseInt(f.querySelector('#'+id).value,10);return isNaN(v)||v<0?fallback:v}
 
-function renderAll(){renderJapa();renderPlan();renderHoly();renderHist();renderSet()}
+function renderAll(){applyTheme();renderJapa();renderPlan();renderHoly();renderHist();renderGuide();renderSet()}
 function show(v){
-  ['japa','plan','holy','hist','set'].forEach(function(x){$('v-'+x).classList.toggle('hide',x!==v)});
+  ['japa','plan','holy','hist','guide','set'].forEach(function(x){$('v-'+x).classList.toggle('hide',x!==v)});
   document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v)});
   if(v==='japa')requestWake();else releaseWake();
   renderAll();window.scrollTo(0,0);
@@ -792,7 +945,7 @@ function bind(){
   $('pad').addEventListener('contextmenu',function(e){e.preventDefault()});
   $('pad').addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){e.preventDefault();tap()}});
   $('pad').tabIndex=0;
-  $('undo').onclick=function(){if(S.today.counter>0){SL.undoBead(S.today,S.paceLog);lastDur=null;save();renderJapa()}};
+  $('undo').onclick=function(){if(S.today.counter>0){SL.undoBead(S.today,S.paceLog);save();renderJapa()}};
   $('mPlus').onclick=function(){S.today.morning++;save();renderJapa()};
   $('mMinus').onclick=function(){if(S.today.morning>0){S.today.morning--;save();renderJapa()}};
   $('gitaChk').onchange=function(){S.today.gita=this.checked;save();if(this.checked)toast('Gita study marked 🙏')};
@@ -800,7 +953,7 @@ function bind(){
   $('bmSave').onclick=saveBm;
   $('studyNote').addEventListener('change',function(){S.today.note=this.value.trim();save()});
   $('studyNote').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur()}});
-  $('copyObs').onclick=function(){S.today.note=$('studyNote').value.trim();save();var t=S.today,line=SL.mdLine(t.date,{rounds:SL.totalRounds(t),target:t.target,bm:t.bm||S.bookmark,note:t.note});
+  $('copyObs').onclick=function(){S.today.note=$('studyNote').value.trim();save();var t=S.today,line=SL.mdLine(t.date,{rounds:SL.totalRounds(t),target:t.target,bm:t.bm||S.bookmark,note:t.note,sankalpa:t.sankalpa});
     function shown(){$('impText').value=line;toast('Copy failed. The line is in Settings › Backup')}
     if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(line).then(function(){toast('Copied for Obsidian')},shown);else shown()};
   $('mdMonth').onclick=function(){var m=calMonth||S.today.date.slice(0,7);shareOrDownload('japa-'+m+'.md',SL.monthMarkdown(S.history,S.today,m),'text/markdown','Japa '+m,function(){toast('Markdown ready')})};$('bookmark').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();saveBm();this.blur()}});
@@ -818,7 +971,23 @@ function bind(){
   $('sVibBead').onchange=function(){S.settings.vibBead=this.checked;save();if(this.checked)vib(12)};
   $('sVibRound').onchange=function(){S.settings.vibRound=this.checked;save();if(this.checked)vib([180,90,180])};
   $('sWake').onchange=function(){S.settings.wakeLock=this.checked;save()};
-  $('sPace').onchange=function(){S.settings.pace=this.value==='adaptive'?'adaptive':+this.value;save();renderJapa()};
+  $('sTheme').onchange=function(){S.settings.theme=this.value;save();applyTheme()};
+  $('themeBtn').onclick=function(){var order=['auto','day','dusk','oled'];S.settings.theme=order[(order.indexOf(S.settings.theme)+1)%4];save();applyTheme();renderSet();toast('Theme: '+(S.settings.theme==='auto'?'Auto':$('themeBtn').textContent))};
+  $('sGita').onchange=function(){S.settings.gitaTarget=this.value;save();renderSet();renderJapa()};
+  $('sGitaUrl').onchange=function(){S.settings.gitaCustomUrl=this.value.trim();save();renderJapa()};
+  $('calSeg').onclick=function(e){var b=e.target.closest('button');if(!b)return;calType=b.dataset.t;renderSet()};
+  $('sankalpa').addEventListener('change',function(){S.today.sankalpa=this.value.trim();save()});
+  $('sankalpa').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur()}});
+  $('meals').onclick=function(e){var b=e.target.closest('button[data-meal]');if(!b)return;var k=b.dataset.meal;S.today.meals=S.today.meals||{};S.today.meals[k]=!S.today.meals[k];save();renderToday4();if(S.today.meals[k])toast('Oṁ tat sat 🙏')};
+  $('copySum').onclick=function(){copyText(SL.dailySummary(S.today,S.today.bm||S.bookmark),'Copied for Sadhana')};
+  $('adjTarget').onclick=function(){var t=S.today,base=S.settings.baseTarget;
+    dialog('<b>Today’s target ('+nice(t.date)+')</b><p class="small">Just for today. Your usual '+base+' stays the same, and a changed target never creates makeup rounds for tomorrow.</p>'+numField('aT','Rounds today',t.target)+
+      '<div class="row" style="justify-content:flex-start;flex-wrap:wrap"><button type="button" class="btn s" data-set="'+(base+4)+'">Ekadashi +4 ('+(base+4)+')</button><button type="button" class="btn s" data-set="8">Sick / travel (8)</button><button type="button" class="btn s" data-set="reset">Back to usual</button></div>',
+      function(f){var v=f.dataset.reset?null:intVal(f,'aT',t.target);if(v==null){t.target=base+(t.carry||0);t.override=false;toast('Back to usual target')}else if(v!==t.target){t.target=Math.max(1,v);t.override=true;toast('Today’s target: '+t.target)}save();renderAll()});
+    var f=$('dlgForm');delete f.dataset.reset;f.querySelectorAll('[data-set]').forEach(function(b){b.onclick=function(){if(b.dataset.set==='reset'){f.dataset.reset='1';f.querySelector('#aT').value=base+(t.carry||0)}else{delete f.dataset.reset;f.querySelector('#aT').value=b.dataset.set}}})};
+  $('qAdd').onclick=function(){var v=$('qNew').value.trim();if(!v)return;S.anjana.push({text:v,done:false,added:S.today.date});$('qNew').value='';save();renderGuide()};
+  $('qNew').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();$('qAdd').click()}});
+  $('qList').onclick=function(e){var d=e.target.dataset.qdel;if(d!=null){S.anjana.splice(+d,1);save();renderGuide();return}var q=e.target.dataset.q;if(q!=null){S.anjana[+q].done=e.target.checked;save();renderGuide()}};
   $('sChimeRound').onchange=function(){S.settings.chimeRound=this.checked;save();if(this.checked)chime()};
   $('sChimeBlocks').onchange=function(){S.settings.chimeBlocks=this.checked;save();if(this.checked)chime()};
   $('altarAdd').onclick=function(){var v=$('altarNew').value.trim();if(!v)return;S.settings.altarItems.push(v);$('altarNew').value='';save();renderAll()};
@@ -854,7 +1023,7 @@ function bind(){
     SL.rollover(S,todayKey());save();renderAll();$('impText').value='';toast('Backup restored 🙏')};
   $('resetCounter').onclick=function(){if(!confirm('Reset today’s bead counter ('+S.today.counter+') to 0?'))return;if(!confirm('Are you sure? This can’t be undone.'))return;S.today.counter=0;save();renderAll();toast('Counter reset')};
   document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'){checkDay();renderJapa();requestWake()}});
-  setInterval(function(){if(!$('v-japa').classList.contains('hide')&&document.visibilityState==='visible')renderSpeed()},1000);
+  setInterval(applyTheme,60000);
   setInterval(blockChimeCheck,15000);
   setInterval(function(){checkDay();if(!$('v-japa').classList.contains('hide'))renderNext();if(!$('v-plan').classList.contains('hide'))renderPlan()},20000);
 }

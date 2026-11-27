@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1530">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="IDC Study">
+<title>Disciple Course Study</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<style>
+:root{--bg:#0b1530;--bg2:#12204a;--card:#16275a;--line:#24366e;--text:#eef1fb;--mute:#9aa6cc;--saf:#f4a340;--saf2:#ffcf7a;--gold:#e7c26a;--gold-bg:rgba(231,194,106,.22);--part:rgba(154,166,204,.18);--nav:#0a1228;--track:#24366e;--onSaf:#1b1205}
+html[data-theme=day]{--bg:#f7efe1;--bg2:#fff8ec;--card:#fffaf2;--line:#e6d3b3;--text:#2d2216;--mute:#7b6a55;--saf:#c8670f;--saf2:#a4500a;--gold:#a8781c;--gold-bg:rgba(200,150,40,.22);--part:rgba(120,100,70,.12);--nav:#fbf3e4;--track:#ead9bb;--onSaf:#fff}
+html[data-theme=oled]{--bg:#000;--bg2:#070302;--card:#050202;--line:#2a1206;--text:#d98a4a;--mute:#8a4d24;--saf:#c2410c;--saf2:#e07a32;--gold:#c9772a;--gold-bg:rgba(201,119,42,.18);--part:rgba(140,60,20,.14);--nav:#000;--track:#1f0d05;--onSaf:#000}
+html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{max-width:720px;margin:0 auto;padding:12px 14px 96px;padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+header h1{font-size:18px;margin:0;color:var(--saf2);font-weight:600;letter-spacing:.3px}
+.themeBtn{background:none;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:13px;color:var(--mute)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin:10px 0}
+.small{font-size:13px;color:var(--mute)}
+.btn{border:1px solid var(--line);background:var(--bg2);color:var(--text);border-radius:12px;padding:10px 14px;min-height:44px;font:inherit}
+.btn.p{background:var(--saf);border-color:var(--saf);color:var(--onSaf);font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line)}
+.chk:last-child{border-bottom:0}
+.chk input{width:22px;height:22px;accent-color:var(--saf);margin-top:2px;flex:none}
+label.f span{display:block;font-size:13px;color:var(--mute);margin-bottom:3px}
+input[type=text],select,textarea{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:9px 10px;min-height:42px;width:100%;color:var(--text);font:inherit;box-sizing:border-box}
+textarea{font:13px/1.45 ui-monospace,monospace;min-height:110px}
+.seg{display:flex;flex-wrap:wrap;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;min-width:72px;border:0;background:none;color:var(--text);border-radius:9px;padding:8px 6px;min-height:40px;font:inherit}
+.seg button.on{background:var(--saf);color:var(--onSaf);font-weight:600}
+.bar{height:10px;background:var(--track);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--saf);width:0}
+.qitem,.term{padding:8px 0;border-bottom:1px solid var(--line)}
+.qitem:last-child,.term:last-child{border-bottom:0}
+.badge{font-size:12px;color:var(--saf2)}
+h2{font-size:16px;margin:0 0 8px;color:var(--saf2)}
+h3{font-size:15px;margin:16px 0 6px}
+p{margin:0 0 8px}
+a{color:var(--saf2)}
+.sanskrit{font-style:normal;margin:6px 0;color:var(--text)}
+.choice{display:block;width:100%;text-align:left;margin:6px 0}
+.choice.on{border-color:var(--saf);background:var(--gold-bg)}
+.hide{display:none}
+.upd{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:var(--saf);color:var(--onSaf);font-weight:600;border:0;border-radius:999px;padding:10px 18px;z-index:9;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--nav);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:8}
+nav button{flex:1;background:none;border:0;padding:10px 2px 12px;color:var(--mute);font-size:12px;min-height:60px}
+nav button.on{color:var(--saf2);font-weight:600}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);color:var(--text);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none;max-width:90vw;text-align:center;z-index:10}
+.stat{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;flex:1;min-width:90px}
+.stat b{display:block;font-size:18px;color:var(--saf2)}
+ol.lin{padding-left:1.4em;margin:0}
+ol.lin li{margin:2px 0}
+</style>
+</head>
+<body>
+<button class="upd hide" id="updBar">Updated, tap to refresh</button>
+<header>
+  <h1>Disciple Course Study</h1>
+  <button class="themeBtn" type="button" id="themeBtn">Theme</button>
+</header>
+<div class="row">
+  <button class="btn p" type="button" id="openCourse">Open Course on iskconcongregation.com</button>
+</div>
+<section class="card" id="progressCard"></section>
+<main id="app"></main>
+<nav>
+  <button type="button" data-tab="study" class="on">Study</button>
+  <button type="button" data-tab="quiz">Quiz</button>
+  <button type="button" data-tab="cards">Cards</button>
+  <button type="button" data-tab="library">Library</button>
+  <button type="button" data-tab="settings">Settings</button>
+</nav>
+<div class="toast" id="toast"></div>
+<script src="data.js"></script>
+<script src="logic.js"></script>
+<script>
+
+var tab = 'study', lessonId = 'l2', S, quizFilter = 'adaptive', quizList = [], quizIndex = 0, quizSelected = null, quizDone = false, quizSession = {correct:0,total:0}, flipped = false, cardPass = [], cardIndex = 0, termQuery = '', noteTimer, toastTimer;
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+function toast(msg){ var el=$('toast'); el.textContent=msg; el.style.opacity='1'; clearTimeout(toastTimer); toastTimer=setTimeout(function(){ el.style.opacity='0'; }, 2200); }
+function load(){
+  var raw=null;
+  try{ raw=JSON.parse(localStorage.getItem(DC.KEY)); }catch(e){ raw=null; }
+  S = DC.migrate(raw);
+  save();
+}
+function save(){ try{ localStorage.setItem(DC.KEY, JSON.stringify(S)); }catch(e){ toast('Could not save. Please export a backup.'); } }
+function hourNow(){ return new Date().getHours(); }
+function applyTheme(){
+  var th=DC.resolveTheme(S.theme, hourNow());
+  document.documentElement.setAttribute('data-theme', th);
+  var meta=document.querySelector('meta[name=theme-color]');
+  if(meta) meta.content=DC.themeColor(th);
+  var b=$('themeBtn'); if(b) b.textContent=DC.themeLabel(S.theme, hourNow());
+}
+function cycleTheme(){
+  var order=['auto','day','dusk','oled'];
+  S.theme=order[(order.indexOf(S.theme)+1)%order.length];
+  save(); applyTheme();
+}
+function lessonIds(){ return COURSE.lessons.map(function(l){ return l.id; }); }
+function lessonById(id){ return COURSE.lessons.filter(function(l){ return l.id===id; })[0] || COURSE.lessons[1]; }
+function topicById(id){ return COURSE.topics.filter(function(t){ return t.id===id; })[0]; }
+function confWord(c){ return c==='needs'?'Needs Review':c==='learning'?'Learning':c==='solid'?'Solid':'Not yet rated'; }
+function confButtons(topicId){
+  var cur=DC.getRating(S, topicId);
+  return '<div class="seg" data-rate="'+esc(topicId)+'">'+
+    [['unreviewed','Not yet'],['needs','Needs Review'],['learning','Learning'],['solid','Solid']].map(function(p){
+      return '<button type="button" data-v="'+p[0]+'" class="'+(cur===p[0]?'on':'')+'">'+p[1]+'</button>';
+    }).join('')+'</div>';
+}
+
+function renderProgress(){
+  var stats=DC.progressStats(S, lessonIds());
+  $('progressCard').innerHTML='<div class="small">Recorded lesson progress · '+stats.done+' of '+stats.total+' ('+stats.pct+'%)</div>'+
+    '<div class="bar" style="margin-top:8px"><i style="width:'+stats.pct+'%"></i></div>';
+}
+
+function renderStudy(){
+  var queue=DC.adaptiveQueue(S, COURSE.topics);
+  var focus=queue.filter(function(t){ var c=DC.getRating(S,t.id); return c==='needs'||c==='unreviewed'; }).slice(0,6);
+  var lesson=lessonById(lessonId);
+  var html='';
+  html+='<section class="card"><h2>Lesson checklist</h2>';
+  COURSE.lessons.forEach(function(l){
+    html+='<label class="chk"><input type="checkbox" data-progress="'+esc(l.id)+'" '+(S.progress[l.id]?'checked':'')+'><span><b>'+esc(l.label)+'</b><div class="small">'+esc(COURSE.units[l.unit]||'')+'</div></span></label>';
+  });
+  html+='<p class="small">Tick a lesson when you have finished it on the official course site. This stays on this phone until you export a backup.</p></section>';
+
+  html+='<section class="card"><h2>Adaptive study queue</h2><p class="small">Needs Review and unreviewed topics stay at the top, starting with Unit One.</p>';
+  (focus.length?focus:queue.slice(0,6)).forEach(function(t){
+    html+='<div class="qitem"><div class="badge">Unit '+esc(t.unit)+', Lesson '+esc(t.lesson)+' · '+esc(confWord(DC.getRating(S,t.id)))+'</div><div>'+esc(t.title)+'</div></div>';
+  });
+  html+='</section>';
+
+  html+='<section class="card"><label class="f"><span>Study notes</span><select id="lessonSel">'+
+    COURSE.lessons.map(function(l){ return '<option value="'+esc(l.id)+'"'+(l.id===lessonId?' selected':'')+'>'+esc(l.label)+'</option>'; }).join('')+
+    '</select></label></section>';
+
+  html+='<section class="card"><h2>'+esc(lesson.label)+'</h2>';
+  lesson.points.forEach(function(p){ html+='<p>'+esc(p)+'</p>'; });
+  if(lesson.id==='l2'){
+    html+='<h3>Brahma-Madhva-Gaudiya parampara</h3><ol class="lin">'+COURSE.parampara.map(function(a){ return '<li>'+esc(a.name)+'</li>'; }).join('')+'</ol>';
+  }
+  if(lesson.topicIds.length){
+    html+='<h3>Rate your confidence</h3>';
+    lesson.topicIds.forEach(function(id){
+      var t=topicById(id);
+      html+='<div class="qitem"><div>'+esc(t.title)+'</div>'+confButtons(id)+'</div>';
+    });
+  }
+  html+='<h3>My takeaways</h3><p class="small">Write only in your own words. Do not paste course or book wording.</p><textarea id="noteBox" placeholder="What I understood...">'+(S.notes[lesson.id]||'')+'</textarea>';
+  html+='<h3>Questions for Anjana</h3><textarea id="anjanaBox" placeholder="Questions to ask my mentor...">'+(S.anjana[lesson.id]||'')+'</textarea>';
+  html+='<div class="row" style="margin-top:10px"><button class="btn p" type="button" id="copyMd">Copy for Obsidian</button><button class="btn" type="button" id="copyAllMd">Copy all lessons</button></div>';
+  html+='</section>';
+  $('app').innerHTML=html;
+}
+
+function startQuiz(){
+  quizList=DC.quizOrder(S, COURSE.questions, quizFilter);
+  quizIndex=0; quizSelected=null; quizDone=false; quizSession={correct:0,total:0,attempted:0};
+  flipped=false;
+}
+function renderQuiz(){
+  var html='<section class="card"><h2>Adaptive quiz</h2><p class="small">Twenty-seven questions across Lessons 2–14. Adaptive mode leads with missed, marked, Needs Review, and unreviewed topics. Scores are saved on this phone.</p>';
+  html+='<label class="f"><span>Question set</span><select id="quizFilter"><option value="adaptive">Adaptive (Weak &amp; Missed First)</option><option value="all">All units</option><option value="1">Unit One</option><option value="2">Unit Two</option><option value="3">Unit Three</option><option value="4">Unit Four</option></select></label>';
+  if(S.quiz.best) html+='<p class="small">Best score: '+S.quiz.best.correct+' / '+S.quiz.best.total+' ('+S.quiz.best.pct+'%).</p>';
+  html+='</section>';
+  if(!quizList.length) startQuiz();
+  if(quizDone){
+    var pct=quizSession.total?Math.round((quizSession.correct/quizSession.total)*100):0;
+    html+='<section class="card"><h2>Session score</h2><div class="row"><div class="stat"><b>'+quizSession.correct+' / '+quizSession.total+'</b><span class="small">Correct</span></div><div class="stat"><b>'+pct+'%</b><span class="small">This pass</span></div><div class="stat"><b>'+(S.quiz.missed.length)+'</b><span class="small">Still missed</span></div></div>';
+    html+='<div class="row" style="margin-top:10px"><button class="btn p" type="button" id="quizAgain">Practice again</button></div></section>';
+  } else {
+    var q=quizList[quizIndex];
+    var t=topicById(q.topicId);
+    html+='<section class="card"><h2>Question '+(quizIndex+1)+' of '+quizList.length+'</h2><p class="small">Lesson '+(t?t.lesson:'')+' — '+(t?esc(t.title):'')+'</p><p>'+esc(q.prompt)+'</p>';
+    q.choices.forEach(function(ch,i){
+      html+='<button class="btn choice'+(quizSelected===i?' on':'')+'" type="button" data-choice="'+i+'">'+esc(ch)+'</button>';
+    });
+    if(quizSelected!==null){
+      var ok=quizSelected===q.answer;
+      html+='<p>'+(ok?'Correct. ':'Not quite. The better answer is: '+esc(q.choices[q.answer])+'. ')+esc(q.explain)+'</p>';
+      html+='<div class="row"><button class="btn" type="button" id="markRev">'+(S.quiz.marked.indexOf(q.id)>=0?'Marked for review':'Mark for review')+'</button>';
+      html+='<button class="btn p" type="button" id="nextQ">'+(quizIndex+1<quizList.length?'Next question':'See session score')+'</button></div>';
+    }
+    html+='</section>';
+  }
+  $('app').innerHTML=html;
+  var sel=$('quizFilter'); if(sel) sel.value=quizFilter;
+}
+
+function startCards(){
+  cardPass=DC.cardQueue(S, COURSE.cards);
+  cardIndex=0; flipped=false;
+}
+function renderCards(){
+  var stats=DC.cardStats(S, COURSE.cards);
+  if(!cardPass.length) startCards();
+  var html='<section class="card"><h2>Flashcards</h2><p class="small">Review again and new cards come first. Got it and Review again are remembered across sessions.</p><div class="row"><div class="stat"><b>'+stats.again+'</b><span class="small">Review again</span></div><div class="stat"><b>'+stats.fresh+'</b><span class="small">Not yet rated</span></div><div class="stat"><b>'+stats.got+'</b><span class="small">Got it</span></div></div></section>';
+  if(cardIndex>=cardPass.length){
+    html+='<section class="card"><p>You finished this pass. Restart to go through Review again cards first.</p><button class="btn p" type="button" id="cardRestart">Restart deck</button></section>';
+  } else {
+    var c=cardPass[cardIndex];
+    var t=topicById(c.topicId);
+    html+='<section class="card"><p class="small">Card '+(cardIndex+1)+' of '+cardPass.length+' in this pass · Lesson '+(t?t.lesson:'')+' — '+(t?esc(t.title):'')+'</p>';
+    html+='<p><b>'+esc(c.front)+'</b></p>';
+    if(flipped) html+='<p>'+esc(c.back)+'</p>';
+    html+='<div class="row">';
+    if(!flipped) html+='<button class="btn p" type="button" id="reveal">Reveal answer</button>';
+    else html+='<button class="btn" type="button" id="cardAgain">Review again</button><button class="btn p" type="button" id="cardGot">Got it</button>';
+    html+='</div></section>';
+  }
+  $('app').innerHTML=html;
+}
+
+function renderLibrary(){
+  var q=termQuery.trim().toLowerCase();
+  var terms=COURSE.terms.filter(function(t){
+    if(!q) return true;
+    return (t.term+' '+t.meaning+' '+t.refs).toLowerCase().indexOf(q)>=0;
+  });
+  if(!terms.length) terms=COURSE.terms;
+  var html='<section class="card"><h2>Searchable glossary</h2><p class="small">Plain-language definitions. Type to filter. Translations from copyrighted books are not copied here.</p><label class="f"><span>Filter terms</span><input id="termBox" type="text" placeholder="For example: vani, diksa, pranipata" value="'+esc(termQuery)+'"></label>';
+  terms.forEach(function(t){ html+='<div class="term"><b>'+esc(t.term)+'</b><div>'+esc(t.meaning)+'</div><div class="small">'+esc(t.refs)+'</div></div>'; });
+  html+='</section>';
+  html+='<section class="card"><h2>Brahma-Madhva-Gaudiya parampara</h2><p class="small">The thirty-two acaryas in the lineage ISKCON publicly presents, from Krishna to Srila Prabhupada. Later ISKCON gurus continue this living succession as his representatives.</p><ol class="lin">'+COURSE.parampara.map(function(a){ return '<li>'+esc(a.name)+'</li>'; }).join('')+'</ol></section>';
+  html+='<section class="card"><h2>Sanskrit verses</h2><p class="small">Traditional transliteration with original takeaways only. Open Vedabase to read an official translation. No BBT wording is copied here.</p>';
+  COURSE.verses.forEach(function(v){
+    html+='<div class="term"><b>'+esc(v.title)+'</b><div class="sanskrit">'+esc(v.sanskrit)+'</div><div>'+esc(v.takeaway)+'</div><div class="small"><a href="'+esc(v.href)+'" target="_blank" rel="noopener">Open on Vedabase</a></div></div>';
+  });
+  html+='</section>';
+  html+='<section class="card"><h2>Free official resources</h2><p class="small">Verified public GBC, ISKCON Education, course, and Vedabase pages. These stay official; this app only summarizes them in original prose.</p>';
+  COURSE.links.forEach(function(l){
+    html+='<div class="term"><a href="'+esc(l.href)+'" target="_blank" rel="noopener">'+esc(l.title)+'</a><div class="small">'+esc(l.site)+'</div></div>';
+  });
+  html+='</section>';
+  $('app').innerHTML=html;
+  var box=$('termBox'); if(box){ box.focus(); var v=box.value; box.setSelectionRange(v.length,v.length); }
+}
+
+function renderSettings(){
+  var html='<section class="card"><h2>Theme</h2><p class="small">Matches Sadhana Japa on this phone: Warm Daylight, Dusk, and OLED Pitch Black. Auto switches at 7 AM, 5 PM, and 9 PM.</p>';
+  html+='<div class="seg" id="themeSeg">';
+  [['auto','Auto'],['day','Warm Daylight'],['dusk','Dusk'],['oled','OLED Pitch Black']].forEach(function(p){
+    html+='<button type="button" data-theme="'+p[0]+'" class="'+(S.theme===p[0]?'on':'')+'">'+p[1]+'</button>';
+  });
+  html+='</div></section>';
+  html+='<section class="card"><h2>Backup and export</h2><p class="small">Progress, confidence ratings, quiz memory, flashcards, and notes live in this phone\'s localStorage. Export a JSON backup, or copy Markdown for your Vaishnava_Study vault.</p>';
+  html+='<div class="row"><button class="btn p" type="button" id="exportJson">Export JSON backup</button><button class="btn" type="button" id="importBtn">Import JSON backup</button><button class="btn" type="button" id="copyAllMd2">Copy all notes for Obsidian</button></div>';
+  html+='<input id="importFile" type="file" accept="application/json,.json" class="hide">';
+  html+='<label class="f" style="margin-top:10px"><span>Or paste a backup and import</span><textarea id="importBox" placeholder="{ ... }"></textarea></label>';
+  html+='<button class="btn" type="button" id="importPaste">Import pasted backup</button></section>';
+  html+='<section class="card"><h2>About this companion</h2><p>This is a personal, offline study guide for the ISKCON Disciple Course (Self-Paced). Official videos, workshops, the summary quiz, the ten essays, and the certificate remain on iskconcongregation.com, which must record your completion for initiation.</p><p>Study notes are original prose summarizing publicly posted GBC statements, ISKCON Law, and traditional Sanskrit verses. This app does not include wording from Bhagavad-gita As It Is or verbatim course workbook text.</p></section>';
+  $('app').innerHTML=html;
+}
+
+function render(){
+  applyTheme();
+  renderProgress();
+  if(tab==='study') renderStudy();
+  else if(tab==='quiz') renderQuiz();
+  else if(tab==='cards') renderCards();
+  else if(tab==='library') renderLibrary();
+  else renderSettings();
+}
+
+function copyText(text, okMsg){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){ toast(okMsg); }).catch(function(){ fallbackCopy(text, okMsg); });
+  } else fallbackCopy(text, okMsg);
+}
+function fallbackCopy(text, okMsg){
+  var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); toast(okMsg); }catch(e){ toast('Copy failed. Long-press to copy.'); }
+  document.body.removeChild(ta);
+}
+function downloadBackup(){
+  var blob=new Blob([DC.exportBackup(S)], {type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='disciple-course-backup.json';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 500);
+  toast('Backup downloaded.');
+}
+function importFromString(str){
+  try{
+    S=DC.importBackup(str);
+    save(); render(); toast('Backup imported.');
+  }catch(e){ toast(e.message || 'Could not import that backup.'); }
+}
+
+document.addEventListener('click', function(e){
+  var t=e.target;
+  if(t.id==='themeBtn'){ cycleTheme(); return; }
+  if(t.id==='openCourse'){ window.open(COURSE.officialCourseUrl, '_blank', 'noopener'); return; }
+  if(t.closest && t.closest('nav') && t.getAttribute('data-tab')){
+    tab=t.getAttribute('data-tab');
+    document.querySelectorAll('nav button').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-tab')===tab); });
+    if(tab==='quiz' && !quizList.length) startQuiz();
+    if(tab==='cards' && !cardPass.length) startCards();
+    render(); return;
+  }
+  if(t.hasAttribute && t.hasAttribute('data-v') && t.parentElement && t.parentElement.getAttribute('data-rate')){
+    DC.setRating(S, t.parentElement.getAttribute('data-rate'), t.getAttribute('data-v')); save(); render(); return;
+  }
+  if(t.id==='copyMd'){ copyText(DC.obsidianMarkdown(S, COURSE, lessonId), 'Copied for Obsidian.'); return; }
+  if(t.id==='copyAllMd' || t.id==='copyAllMd2'){ copyText(DC.obsidianMarkdown(S, COURSE), 'All notes copied.'); return; }
+  if(t.id==='quizAgain'){ startQuiz(); render(); return; }
+  if(t.hasAttribute && t.hasAttribute('data-choice') && quizSelected===null){
+    var q=quizList[quizIndex], i=parseInt(t.getAttribute('data-choice'),10);
+    quizSelected=i;
+    var ok=i===q.answer;
+    DC.recordAnswer(S, q.id, q.topicId, ok, i);
+    quizSession.correct += ok?1:0; quizSession.total += 1; save(); render(); return;
+  }
+  if(t.id==='markRev'){ DC.markReview(S, quizList[quizIndex].id); save(); render(); return; }
+  if(t.id==='nextQ'){
+    if(quizIndex+1<quizList.length){ quizIndex+=1; quizSelected=null; }
+    else { quizDone=true; DC.recordQuizSession(S, quizSession.correct, quizSession.total, quizFilter, new Date().toISOString()); save(); }
+    render(); return;
+  }
+  if(t.id==='reveal'){ flipped=true; render(); return; }
+  if(t.id==='cardAgain' || t.id==='cardGot'){
+    var card=cardPass[cardIndex];
+    DC.rateCard(S, card.id, t.id==='cardGot', card.topicId); save();
+    cardIndex+=1; flipped=false; render(); return;
+  }
+  if(t.id==='cardRestart'){ startCards(); render(); return; }
+  if(t.id==='exportJson'){ downloadBackup(); return; }
+  if(t.id==='importBtn'){ $('importFile').click(); return; }
+  if(t.id==='importPaste'){ importFromString(($('importBox')&&$('importBox').value)||''); return; }
+  if(t.getAttribute && t.getAttribute('data-theme')){ S.theme=t.getAttribute('data-theme'); save(); render(); return; }
+});
+
+document.addEventListener('change', function(e){
+  var t=e.target;
+  if(t.id==='lessonSel'){ lessonId=t.value; render(); return; }
+  if(t.id==='quizFilter'){ quizFilter=t.value; startQuiz(); render(); return; }
+  if(t.hasAttribute('data-progress')){ DC.setProgress(S, t.getAttribute('data-progress'), t.checked); save(); renderProgress(); return; }
+  if(t.id==='importFile' && t.files && t.files[0]){
+    var reader=new FileReader();
+    reader.onload=function(){ importFromString(String(reader.result||'')); };
+    reader.readAsText(t.files[0]);
+  }
+});
+
+document.addEventListener('input', function(e){
+  var t=e.target;
+  if(t.id==='noteBox'){ DC.setNote(S, lessonId, t.value); clearTimeout(noteTimer); noteTimer=setTimeout(save, 200); }
+  if(t.id==='anjanaBox'){ DC.setAnjana(S, lessonId, t.value); clearTimeout(noteTimer); noteTimer=setTimeout(save, 200); }
+  if(t.id==='termBox'){ termQuery=t.value; renderLibrary(); }
+});
+
+load();
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+  var bar=$('updBar'), reloading=false, asked=false;
+  function prompt(w){ bar.classList.remove('hide'); bar.onclick=function(){ bar.textContent='Updating…'; asked=true; w.postMessage('skipWaiting'); }; }
+  navigator.serviceWorker.addEventListener('controllerchange', function(){ if(asked&&!reloading){ reloading=true; location.reload(); } });
+  navigator.serviceWorker.register('sw.js').then(function(reg){
+    if(reg.waiting && navigator.serviceWorker.controller) prompt(reg.waiting);
+    reg.addEventListener('updatefound', function(){ var w=reg.installing; if(!w) return; w.addEventListener('statechange', function(){ if(w.state==='installed' && navigator.serviceWorker.controller) prompt(w); }); });
+  }).catch(function(){});
+}
+render();
+</script>
+</body>
+</html>

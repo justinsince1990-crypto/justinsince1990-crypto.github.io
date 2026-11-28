@@ -342,7 +342,7 @@ var SL = (function () {
   }
   function blankState(today) {
     return {
-      version: 4, migrations: { kartikBackfillV1: true }, anjana: [],
+      version: 5, migrations: { kartikBackfillV1: true, kartikBackfillV2: true }, anjana: [],
       paceLog: [], lastExport: null, backupSnooze: null,
       settings: { baseTarget: 16, vibBead: false, vibRound: true, wakeLock: true, theme: 'auto', gitaTarget: 'vedabase', gitaCustomUrl: '', pace: 'adaptive', chimeRound: false, chimeBlocks: false, notify: false, altarItems: DEFAULT_ALTAR.slice(), plans: defaultPlans(), dayTypes: { '2026-11-25': 'late', '2026-11-26': 'weekend', '2026-11-27': 'late' } },
       today: newDay(today, 16, 0),
@@ -351,16 +351,45 @@ var SL = (function () {
       holy: null
     };
   }
+  // Save yesterday into history. If a higher total was already logged (e.g. edited in History), keep it.
+  function recordDay(state, t, total) {
+    var items = state.settings.altarItems || [], done = items.filter(function (it) { return t.altar && t.altar[it]; }).length;
+    var rec = { rounds: total, target: t.target, gita: !!t.gita, morning: t.morning, counter: t.counter, note: t.note || '', bm: t.bm || '', sankalpa: t.sankalpa || '', meals: { b: !!(t.meals && t.meals.b), l: !!(t.meals && t.meals.l), d: !!(t.meals && t.meals.d) }, override: !!t.override, altar: { done: done, of: items.length, items: items.filter(function (it) { return t.altar && t.altar[it]; }) } };
+    var existing = state.history[t.date];
+    if (existing && (existing.rounds || 0) > rec.rounds) {
+      rec.rounds = existing.rounds;
+      if (existing.target) rec.target = existing.target;
+      if (existing.note && !rec.note) rec.note = existing.note;
+      if (existing.override) rec.override = true;
+    }
+    state.history[t.date] = rec;
+    return rec;
+  }
+  // Non-override target for a date = base + shortfall from the immediately previous day only.
+  function expectedTarget(state, date) {
+    var base = (state.settings && state.settings.baseTarget) || 16, prev = state.history[addDays(date, -1)];
+    if (!prev || prev.override) return base;
+    return base + computeCarry(prev.target, prev.rounds, base);
+  }
+  // Repair today's target from yesterday's history (does not touch override days). Safe to run every load.
+  function syncTodayCarry(state) {
+    if (!state || !state.today || state.today.override) return false;
+    var base = (state.settings && state.settings.baseTarget) || 16, exp = expectedTarget(state, state.today.date), carry = exp - base;
+    if (state.today.target === exp && (state.today.carry || 0) === carry) return false;
+    state.today.target = exp;
+    state.today.carry = carry;
+    return true;
+  }
   // Roll the day over if the calendar date changed. Returns true if it rolled.
   function rollover(state, todayKey) {
     var t = state.today, base = state.settings.baseTarget;
     if (!t || t.date === todayKey) return false;
     if (daysBetween(t.date, todayKey) < 0) return false; // clock went backwards: leave data alone
     var total = totalRounds(t);
-    var items = state.settings.altarItems || [], done = items.filter(function (it) { return t.altar && t.altar[it]; }).length;
-    state.history[t.date] = { rounds: total, target: t.target, gita: !!t.gita, morning: t.morning, counter: t.counter, note: t.note || '', bm: t.bm || '', sankalpa: t.sankalpa || '', meals: { b: !!(t.meals && t.meals.b), l: !!(t.meals && t.meals.l), d: !!(t.meals && t.meals.d) }, override: !!t.override, altar: { done: done, of: items.length, items: items.filter(function (it) { return t.altar && t.altar[it]; }) } };
+    var rec = recordDay(state, t, total);
     var gap = daysBetween(t.date, todayKey);
-    var carry = (gap === 1 && !t.override) ? computeCarry(t.target, total, base) : 0; // never more than one day back; a one-day target override never carries
+    // Carry only from the immediate previous day (never walk further back). A one-day target override never carries.
+    var carry = (gap === 1 && !t.override && !rec.override) ? computeCarry(rec.target, rec.rounds, base) : 0;
     state.today = newDay(todayKey, base, carry);
     return true;
   }
@@ -441,6 +470,23 @@ var SL = (function () {
     s.migrations.kartikBackfillV1 = true;
     return true;
   }
+  // Fill Kartik days that exist but were stored as 0 or left empty (V1 only inserted missing keys). Never overwrites a day with rounds > 0, and never touches Nov 18 onward.
+  function applyKartikBackfillV2(s) {
+    s.migrations = s.migrations || {};
+    if (s.migrations.kartikBackfillV2) return false;
+    var h = s.history = s.history || {}, b = kartikBackfill();
+    Object.keys(b).forEach(function (k) {
+      var cur = h[k];
+      if (!cur || !cur.rounds) {
+        h[k] = Object.assign({}, cur || {}, { rounds: b[k].rounds, target: b[k].target, note: (cur && cur.note) || b[k].note });
+      }
+    });
+    var n = h['2026-11-17'];
+    if (!n) h['2026-11-17'] = { rounds: NOV17.rounds, target: NOV17.target, note: NOV17.note };
+    else if (!n.rounds || n.rounds === 10) { n.note = n.note || NOV17.note; n.rounds = NOV17.rounds; n.target = NOV17.target; }
+    s.migrations.kartikBackfillV2 = true;
+    return true;
+  }
   function sumRounds(history, from, to) { var t = 0; Object.keys(history || {}).forEach(function (k) { if (k >= from && k <= to) t += history[k].rounds || 0; }); return t; }
   function seedHistory() {
     var h = kartikBackfill(), d = [['2026-11-18', 16, 16], ['2026-11-19', 16, 16], ['2026-11-20', 16, 16], ['2026-11-21', 16, 16], ['2026-11-22', 10, 16], ['2026-11-23', 22, 22], ['2026-11-24', 16, 16]];
@@ -467,7 +513,9 @@ var SL = (function () {
     if (s.backupSnooze === undefined) s.backupSnooze = null;
     if (s.today) { if (!Array.isArray(s.today.rounds)) s.today.rounds = []; if (s.today.curStart === undefined) s.today.curStart = null; if (!s.today.altar || typeof s.today.altar !== 'object') s.today.altar = {}; if (typeof s.today.note !== 'string') s.today.note = ''; if (typeof s.today.bm !== 'string') s.today.bm = ''; if (!s.today.meals || typeof s.today.meals !== 'object') s.today.meals = {}; if (typeof s.today.sankalpa !== 'string') s.today.sankalpa = ''; if (typeof s.today.override !== 'boolean') s.today.override = false; }
     applyKartikBackfill(s);
-    if (!s.version || s.version < 4) s.version = 4;
+    applyKartikBackfillV2(s);
+    syncTodayCarry(s);
+    if (!s.version || s.version < 5) s.version = 5;
     return s;
   }
   // ---- v2: round timing ----
@@ -665,7 +713,7 @@ var SL = (function () {
     return out;
   }
   function validImport(o) { return o && typeof o === 'object' && o.today && o.settings && o.history && typeof o.today.date === 'string'; }
-  return { BEADS: BEADS, dateKey: dateKey, addDays: addDays, daysBetween: daysBetween, weekday: weekday, roundsFromCounter: roundsFromCounter, beadsInRound: beadsInRound, totalRounds: totalRounds, computeCarry: computeCarry, newDay: newDay, blankState: blankState, rollover: rollover, isComplete: isComplete, streak: streak, defaultPlans: defaultPlans, dayType: dayType, toMin: toMin, fmt12: fmt12, blockStatus: blockStatus, nextHoly: nextHoly, seedHistory: seedHistory, validImport: validImport, migrate: migrate, tapBead: tapBead, undoBead: undoBead, paceStats: paceStats, paceMs: paceMs, norm: norm, slowDown: slowDown, curElapsed: curElapsed, eta: eta, fmtDur: fmtDur, holyToday: holyToday, verseIndex: verseIndex, vedabaseUrl: vedabaseUrl, backupDue: backupDue, nextDateOfType: nextDateOfType, gcalLink: gcalLink, buildICS: buildICS, upcomingBlocks: upcomingBlocks, DEFAULT_ALTAR: DEFAULT_ALTAR, mdLine: mdLine, dailySummary: dailySummary, themeFor: themeFor, gitaUrl: gitaUrl, parseBm: parseBm, stats: stats, heat: heat, niceKey: niceKey, kartikBackfill: kartikBackfill, applyKartikBackfill: applyKartikBackfill, sumRounds: sumRounds, monthMarkdown: monthMarkdown };
+  return { BEADS: BEADS, dateKey: dateKey, addDays: addDays, daysBetween: daysBetween, weekday: weekday, roundsFromCounter: roundsFromCounter, beadsInRound: beadsInRound, totalRounds: totalRounds, computeCarry: computeCarry, newDay: newDay, blankState: blankState, rollover: rollover, isComplete: isComplete, streak: streak, defaultPlans: defaultPlans, dayType: dayType, toMin: toMin, fmt12: fmt12, blockStatus: blockStatus, nextHoly: nextHoly, seedHistory: seedHistory, validImport: validImport, migrate: migrate, tapBead: tapBead, undoBead: undoBead, paceStats: paceStats, paceMs: paceMs, norm: norm, slowDown: slowDown, curElapsed: curElapsed, eta: eta, fmtDur: fmtDur, holyToday: holyToday, verseIndex: verseIndex, vedabaseUrl: vedabaseUrl, backupDue: backupDue, nextDateOfType: nextDateOfType, gcalLink: gcalLink, buildICS: buildICS, upcomingBlocks: upcomingBlocks, DEFAULT_ALTAR: DEFAULT_ALTAR, mdLine: mdLine, dailySummary: dailySummary, themeFor: themeFor, gitaUrl: gitaUrl, parseBm: parseBm, stats: stats, heat: heat, niceKey: niceKey, kartikBackfill: kartikBackfill, applyKartikBackfill: applyKartikBackfill, applyKartikBackfillV2: applyKartikBackfillV2, expectedTarget: expectedTarget, syncTodayCarry: syncTodayCarry, recordDay: recordDay, sumRounds: sumRounds, monthMarkdown: monthMarkdown };
 })();
 if (typeof module !== 'undefined') module.exports = SL;
 
@@ -697,7 +745,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('
 function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove('on')},2600)}
 function checkDay(){
   var prev=S.today.date;
-  if(SL.rollover(S,todayKey())){
+  if(SL.rollover(S,todayKey())){SL.syncTodayCarry(S);
     var h=S.history[prev];save();
     toast('New day 🙏 '+nice(prev)+' saved: '+h.rounds+'/'+h.target);
     renderAll();scheduleNotifs();
@@ -957,7 +1005,7 @@ function bind(){
     function shown(){$('impText').value=line;toast('Copy failed. The line is in Settings › Backup')}
     if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(line).then(function(){toast('Copied for Obsidian')},shown);else shown()};
   $('mdMonth').onclick=function(){var m=calMonth||S.today.date.slice(0,7);shareOrDownload('japa-'+m+'.md',SL.monthMarkdown(S.history,S.today,m),'text/markdown','Japa '+m,function(){toast('Markdown ready')})};$('bookmark').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();saveBm();this.blur()}});
-  $('editToday').onclick=function(){var t=S.today;dialog('<b>Edit today ('+nice(t.date)+')</b>'+numField('eM','Morning bead rounds',t.morning)+numField('eC','Counter (total beads tapped today)',t.counter)+numField('eT','Today’s target (rounds)',t.target),function(f){t.morning=intVal(f,'eM',t.morning);var nc=intVal(f,'eC',t.counter);if(nc!==t.counter){t.counter=nc;t.curStart=null}t.target=Math.max(1,intVal(f,'eT',t.target));save();renderAll();toast('Today updated')})};
+  $('editToday').onclick=function(){var t=S.today;dialog('<b>Edit today ('+nice(t.date)+')</b>'+numField('eM','Morning bead rounds',t.morning)+numField('eC','Counter (total beads tapped today)',t.counter)+numField('eT','Today’s target (rounds)',t.target),function(f){t.morning=intVal(f,'eM',t.morning);var nc=intVal(f,'eC',t.counter);if(nc!==t.counter){t.counter=nc;t.curStart=null}var nt=Math.max(1,intVal(f,'eT',t.target));if(nt!==t.target){t.target=nt;t.override=true;t.carry=Math.max(0,nt-(S.settings.baseTarget||16))}else t.target=nt;save();renderAll();toast('Today updated')})};
   document.querySelectorAll('nav button').forEach(function(b){b.onclick=function(){show(b.dataset.v)}});
   $('typeSeg').onclick=function(e){var b=e.target.closest('button');if(!b)return;var t=b.dataset.t;if(t==='auto')delete S.settings.dayTypes[S.today.date];else S.settings.dayTypes[S.today.date]=t;save();renderAll();scheduleNotifs()};
   $('calPrev').onclick=function(){var y=+calMonth.slice(0,4),m=+calMonth.slice(5)-1;if(m<1){m=12;y--}calMonth=y+'-'+(m<10?'0':'')+m;renderHist()};
@@ -966,7 +1014,7 @@ function bind(){
     if(k===S.today.date){$('editToday').click();return}
     if(k>S.today.date){toast('That day hasn’t come yet');return}
     var r=S.history[k]||{rounds:0,target:S.settings.baseTarget};
-    dialog('<b>'+nice(k)+'</b>'+numField('hR','Rounds chanted',r.rounds)+numField('hT','Target',r.target)+'<label class="chk"><input type="checkbox" id="hClr"> Clear this day</label>',function(f){if(f.querySelector('#hClr').checked)delete S.history[k];else S.history[k]=Object.assign({},r,{rounds:intVal(f,'hR',r.rounds),target:Math.max(1,intVal(f,'hT',r.target))});save();renderHist()})};
+    dialog('<b>'+nice(k)+'</b>'+numField('hR','Rounds chanted',r.rounds)+numField('hT','Target',r.target)+'<label class="chk"><input type="checkbox" id="hClr"> Clear this day</label>',function(f){if(f.querySelector('#hClr').checked)delete S.history[k];else S.history[k]=Object.assign({},r,{rounds:intVal(f,'hR',r.rounds),target:Math.max(1,intVal(f,'hT',r.target))});if(k===SL.addDays(S.today.date,-1)&&!S.today.override)SL.syncTodayCarry(S);save();renderAll()})};
   $('sBase').onchange=function(){var v=parseInt(this.value,10);if(v>0){var d=v-S.settings.baseTarget;S.settings.baseTarget=v;S.today.target=Math.max(1,S.today.target+d);save();renderAll()}};
   $('sVibBead').onchange=function(){S.settings.vibBead=this.checked;save();if(this.checked)vib(12)};
   $('sVibRound').onchange=function(){S.settings.vibRound=this.checked;save();if(this.checked)vib([180,90,180])};
@@ -1020,14 +1068,14 @@ function bind(){
     if(!SL.validImport(o)){toast('That doesn’t look like a backup');return}
     if(!confirm('Replace all data on this phone with this backup?'))return;
     S=SL.migrate(o);if(!S.holy)S.holy=BUNDLED_HOLY.slice();if(!S.settings.plans)S.settings.plans=SL.defaultPlans();if(!S.settings.dayTypes)S.settings.dayTypes={};
-    SL.rollover(S,todayKey());save();renderAll();$('impText').value='';toast('Backup restored 🙏')};
+    SL.rollover(S,todayKey());SL.syncTodayCarry(S);save();renderAll();$('impText').value='';toast('Backup restored 🙏')};
   $('resetCounter').onclick=function(){if(!confirm('Reset today’s bead counter ('+S.today.counter+') to 0?'))return;if(!confirm('Are you sure? This can’t be undone.'))return;S.today.counter=0;save();renderAll();toast('Counter reset')};
   document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'){checkDay();renderJapa();requestWake()}});
   setInterval(applyTheme,60000);
   setInterval(blockChimeCheck,15000);
   setInterval(function(){checkDay();if(!$('v-japa').classList.contains('hide'))renderNext();if(!$('v-plan').classList.contains('hide'))renderPlan()},20000);
 }
-load();SL.rollover(S,todayKey());save();bind();renderAll();scheduleNotifs();
+load();SL.rollover(S,todayKey());SL.syncTodayCarry(S);save();bind();renderAll();scheduleNotifs();
 $('pad').addEventListener('pointerdown',function(){if(S.settings.chimeRound||S.settings.chimeBlocks)audio()},{once:true});
 if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
   var bar=document.getElementById('updBar'),reloading=false,asked=false;

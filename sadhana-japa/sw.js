@@ -1,5 +1,5 @@
 /* Sadhana Japa service worker: cache-first, fully offline. No network calls beyond its own files. */
-var CACHE = 'sadhana-japa-v7';
+var CACHE = 'sadhana-japa-v8';
 var LEGACY = 'sadhana-japa-v1'; // v1 pages have no update prompt, so they are upgraded automatically
 var FILES = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 self.addEventListener('install', function (e) {

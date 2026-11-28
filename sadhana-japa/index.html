@@ -134,6 +134,11 @@ details.card summary::after{content:' ▾';color:var(--mute)}
 .qa{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
 .qa.done span{text-decoration:line-through;color:var(--mute)}
 .qa input[type=checkbox]{width:24px;height:24px;accent-color:var(--saf)}
+.audock{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.auind{font-size:14px}
+.auseek{flex:1;accent-color:var(--saf);min-width:0;height:32px}
+.auspeeds{display:flex;gap:4px;flex-wrap:wrap}
+.audock .on{background:var(--saf);color:var(--onSaf);border-color:var(--saf);font-weight:600}
 .togo{text-align:center;color:var(--mute);font-size:14px;margin-top:8px}
 footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-size:15px;letter-spacing:.5px}
 .hide{display:none!important}
@@ -219,55 +224,55 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
       <div class="row"><input type="text" id="qNew" placeholder="Add a question" style="flex:1"><button class="btn s" id="qAdd" type="button">Add</button></div>
       <div id="qList"></div>
     </div>
-    <details class="card" open><summary>1. Śrī Guru praṇāma</summary>
+    <details class="card" open data-prayer="guru"><summary>1. Śrī Guru praṇāma</summary>
       <div class="mantra">oṁ ajñāna-timirāndhasya jñānāñjana-śalākayā<br>cakṣur unmīlitaṁ yena tasmai śrī-gurave namaḥ</div>
       <div class="phon">om ag-ya-na ti-mi-ran-dhas-ya gya-nan-ja-na sha-la-ka-ya<br>chak-shur un-mee-li-tam ye-na tas-mai shree-gu-ra-ve na-mah</div>
       <div class="small">A bow to the spiritual teacher, who opens the eyes with the lamp of knowledge.</div></details>
-    <details class="card"><summary>2. Śrīla Prabhupāda praṇāma</summary>
+    <details class="card" data-prayer="prabhupada"><summary>2. Śrīla Prabhupāda praṇāma</summary>
       <div class="mantra">nama oṁ viṣṇu-pādāya kṛṣṇa-preṣṭhāya bhū-tale<br>śrīmate bhaktivedānta-svāmin iti nāmine</div>
       <div class="phon">na-ma om vish-nu pa-da-ya krish-na presh-tha-ya bhoo-ta-lay<br>shree-ma-tay bhak-ti-ve-dan-ta sva-min i-ti na-mi-nay</div>
       <div class="mantra">namas te sārasvate deve gaura-vāṇī-pracāriṇe<br>nirviśeṣa-śūnyavādi-pāścātya-deśa-tāriṇe</div>
       <div class="phon">na-mas tay sa-ras-va-tay day-vay gau-ra va-nee pra-cha-ri-nay<br>nir-vi-she-sha shoon-ya-va-di pa-shcha-tya day-sha ta-ri-nay</div>
       <div class="small">A bow to Śrīla Prabhupāda, your teacher in this line, who brought these teachings to the wider world.</div></details>
-    <details class="card"><summary>3. Vaiṣṇava praṇāma</summary>
+    <details class="card" data-prayer="vaisnava"><summary>3. Vaiṣṇava praṇāma</summary>
       <div class="mantra">vāñchā-kalpatarubhyaś ca kṛpā-sindhubhya eva ca<br>patitānāṁ pāvanebhyo vaiṣṇavebhyo namo namaḥ</div>
       <div class="phon">van-cha kal-pa-ta-rub-hyash cha kri-pa sin-dhub-hya e-va cha<br>pa-ti-ta-nam pa-va-neb-hyo vaish-na-veb-hyo na-mo na-mah</div>
       <div class="small">Respects to the Vaiṣṇavas, kind like wish-fulfilling trees and oceans of mercy, who lift up those who have fallen.</div></details>
-    <details class="card"><summary>4. Pañca-tattva mantra</summary>
+    <details class="card" data-prayer="panca-tattva"><summary>4. Pañca-tattva mantra</summary>
       <div class="mantra">(jaya) śrī-kṛṣṇa-caitanya prabhu nityānanda<br>śrī-advaita gadādhara śrīvāsādi-gaura-bhakta-vṛnda</div>
       <div class="phon">jay-uh shree-krish-na chai-tan-ya pra-bhoo nit-ya-nan-da<br>shree-ad-vai-ta ga-da-dha-ra shree-va-sa-di gau-ra bhak-ta vrin-da</div>
       <div class="small">Chant once before beginning rounds. A short address to Śrī Caitanya and His close associates.</div></details>
-    <details class="card"><summary>5. Hare Krishna mahā-mantra</summary>
+    <details class="card" data-prayer="maha-mantra"><summary>5. Hare Krishna mahā-mantra</summary>
       <div class="mantra">Hare Kṛṣṇa Hare Kṛṣṇa<br>Kṛṣṇa Kṛṣṇa Hare Hare<br>Hare Rāma Hare Rāma<br>Rāma Rāma Hare Hare</div>
       <div class="phon">Ha-ray Krish-na Ha-ray Krish-na<br>Krish-na Krish-na Ha-ray Ha-ray<br>Ha-ray Ra-ma Ha-ray Ra-ma<br>Ra-ma Ra-ma Ha-ray Ha-ray</div>
       <div class="small">The holy names of Rādhā and Kṛṣṇa. One full mantra per bead, 108 beads to a round.</div></details>
-    <details class="card"><summary>6. Śrī Caitanya praṇāma</summary>
+    <details class="card" data-prayer="caitanya"><summary>6. Śrī Caitanya praṇāma</summary>
       <div class="mantra">namo mahā-vadānyāya kṛṣṇa-prema-pradāya te<br>kṛṣṇāya kṛṣṇa-caitanya-nāmne gaura-tviṣe namaḥ</div>
       <div class="phon">na-mo ma-ha va-dan-ya-ya krish-na pre-ma pra-da-ya tay<br>krish-na-ya krish-na chai-tan-ya nam-nay gau-ra tvish-e na-mah</div>
       <div class="small">A bow to Śrī Caitanya, Kṛṣṇa appearing in a golden form, freely giving love of God.</div></details>
-    <details class="card"><summary>7. Śrī Kṛṣṇa praṇāma</summary>
+    <details class="card" data-prayer="krsna"><summary>7. Śrī Kṛṣṇa praṇāma</summary>
       <div class="mantra">he kṛṣṇa karuṇā-sindho dīna-bandho jagat-pate<br>gopeśa gopikā-kānta rādhā-kānta namo ’stu te</div>
       <div class="phon">hay krish-na ka-ru-na sin-dho dee-na ban-dho ja-gat pa-tay<br>go-pay-sha go-pi-ka kan-ta ra-dha kan-ta na-mo stu tay</div>
       <div class="small">A bow to Kṛṣṇa, the ocean of kindness, friend of the distressed, and beloved of the gopīs and of Rādhā.</div></details>
-    <details class="card"><summary>8. Śrī Rādhā praṇāma</summary>
+    <details class="card" data-prayer="radha"><summary>8. Śrī Rādhā praṇāma</summary>
       <div class="mantra">tapta-kāñcana-gaurāṅgi rādhe vṛndāvaneśvari<br>vṛṣabhānu-sute devi praṇamāmi hari-priye</div>
       <div class="phon">tap-ta kan-cha-na gau-ran-gi ra-dhay vrin-da-va-nay-shva-ri<br>vri-sha-bha-nu su-tay day-vi pra-na-ma-mi ha-ri pri-yay</div>
       <div class="small">A bow to Śrī Rādhā, shining like molten gold, the queen of Vṛndāvana and Kṛṣṇa’s dearmost.</div></details>
-    <details class="card"><summary>9. Tulasī praṇāma</summary>
+    <details class="card" data-prayer="tulasi"><summary>9. Tulasī praṇāma</summary>
       <div class="mantra">vṛndāyai tulasī-devyai priyāyai keśavasya ca<br>kṛṣṇa-bhakti-prade devi satya-vatyai namo namaḥ</div>
       <div class="phon">vrin-da-yai tu-la-see dayv-yai pri-ya-yai kay-sha-vas-ya cha<br>krish-na bhak-ti pra-day day-vi sat-ya-vat-yai na-mo na-mah</div>
       <div class="small">A bow to Tulasī-devī, dear to Kṛṣṇa, who grants devotion to Him.</div></details>
-    <details class="card"><summary>10. Nṛsiṁha praṇāma</summary>
+    <details class="card" data-prayer="narasimha"><summary>10. Nṛsiṁha praṇāma</summary>
       <div class="mantra">namas te nara-siṁhāya prahlādāhlāda-dāyine<br>hiraṇyakaśipor vakṣaḥ-śilā-ṭaṅka-nakhālaye</div>
       <div class="phon">na-mas tay na-ra sim-ha-ya prah-la-dah-la-da da-yi-nay<br>hi-ran-ya-ka-shi-por vak-shah shi-la tan-ka na-kha-la-ye</div>
       <div class="mantra">ito nṛsiṁhaḥ parato nṛsiṁho yato yato yāmi tato nṛsiṁhaḥ<br>bahir nṛsiṁho hṛdaye nṛsiṁho nṛsiṁham ādiṁ śaraṇaṁ prapadye</div>
       <div class="phon">i-to nri-sim-hah pa-ra-to nri-sim-ho ya-to ya-to ya-mi ta-to nri-sim-hah<br>ba-hir nri-sim-ho hri-da-ye nri-sim-ho nri-sim-ham a-dim sha-ra-nam pra-pad-ye</div>
       <div class="small">A bow to Lord Nṛsiṁha, who delighted Prahlāda and is shelter on every side, outside and in the heart.</div></details>
-    <details class="card"><summary>11. Offering prayer</summary>
+    <details class="card" data-prayer="offering"><summary>11. Offering prayer</summary>
       <div class="mantra">namo brahmaṇya-devāya go-brāhmaṇa-hitāya ca<br>jagad-dhitāya kṛṣṇāya govindāya namo namaḥ</div>
       <div class="phon">na-mo brah-man-ya day-va-ya go-brah-ma-na hi-ta-ya cha<br>ja-gad dhi-ta-ya krish-na-ya go-vin-da-ya na-mo na-mah</div>
       <div class="small">Used when offering food to Kṛṣṇa, who cares for the cows, the brāhmaṇas, and the whole world. Said after the Prabhupāda praṇāma when offering bhoga.</div></details>
-    <details class="card"><summary>12. Gurv-aṣṭakam</summary>
+    <details class="card" data-prayer="gurvastakam"><summary>12. Gurv-aṣṭakam</summary>
       <div class="small" style="margin-bottom:8px">Eight verses by Śrī Viśvanātha Cakravartī Ṭhākura, traditionally sung at maṅgala-ārati. Each verse ends with a bow to the guru’s lotus feet.</div>
       <div class="small">1.</div>
       <div class="mantra">saṁsāra-dāvānala-līḍha-loka-<br>trāṇāya kāruṇya-ghanāghanatvam<br>prāptasya kalyāṇa-guṇārṇavasya<br>vande guroḥ śrī-caraṇāravindam</div>
@@ -358,6 +363,7 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
     </details>
     <div class="card">
       <b>Backup</b>
+      <p class="small">JSON backups include your rounds, notes, and settings, but not prayer audio. Audio files stay only on this phone and work offline. <span id="auUsage"></span></p>
       <div class="row"><button class="btn" id="expBtn">Export backup file</button><button class="btn" id="expCopy">Copy JSON</button></div>
       <label class="f"><span>Import: paste backup JSON or pick a file</span><textarea id="impText"></textarea></label>
       <div class="row"><input type="file" id="impFile" accept=".json,application/json" style="flex:1;min-width:0"><button class="btn" id="impBtn">Import</button></div>
@@ -383,6 +389,7 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
 
 <dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
 <div class="toast" id="toast"></div>
+<input type="file" id="auFile" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg,audio/mpeg,audio/mp4" class="hide" aria-hidden="true">
 <button class="upd hide" id="updBar">Updated, tap to refresh</button>
 
 <script>
@@ -780,7 +787,37 @@ var SL = (function () {
     return out;
   }
   function validImport(o) { return o && typeof o === 'object' && o.today && o.settings && o.history && typeof o.today.date === 'string'; }
-  return { BEADS: BEADS, dateKey: dateKey, addDays: addDays, daysBetween: daysBetween, weekday: weekday, roundsFromCounter: roundsFromCounter, beadsInRound: beadsInRound, totalRounds: totalRounds, computeCarry: computeCarry, newDay: newDay, blankState: blankState, rollover: rollover, isComplete: isComplete, streak: streak, defaultPlans: defaultPlans, dayType: dayType, toMin: toMin, fmt12: fmt12, blockStatus: blockStatus, nextHoly: nextHoly, seedHistory: seedHistory, validImport: validImport, migrate: migrate, tapBead: tapBead, undoBead: undoBead, paceStats: paceStats, paceMs: paceMs, norm: norm, slowDown: slowDown, curElapsed: curElapsed, eta: eta, fmtDur: fmtDur, holyToday: holyToday, verseIndex: verseIndex, vedabaseUrl: vedabaseUrl, backupDue: backupDue, nextDateOfType: nextDateOfType, gcalLink: gcalLink, buildICS: buildICS, upcomingBlocks: upcomingBlocks, DEFAULT_ALTAR: DEFAULT_ALTAR, mdLine: mdLine, dailySummary: dailySummary, themeFor: themeFor, gitaUrl: gitaUrl, parseBm: parseBm, stats: stats, heat: heat, niceKey: niceKey, kartikBackfill: kartikBackfill, applyKartikBackfill: applyKartikBackfill, applyKartikBackfillV2: applyKartikBackfillV2, expectedTarget: expectedTarget, syncTodayCarry: syncTodayCarry, recordDay: recordDay, sumRounds: sumRounds, monthMarkdown: monthMarkdown };
+  var PRAYER_CARDS = [
+    {id: 'guru', title: 'Śrī Guru praṇāma'},
+    {id: 'prabhupada', title: 'Śrīla Prabhupāda praṇāma'},
+    {id: 'vaisnava', title: 'Vaiṣṇava praṇāma'},
+    {id: 'panca-tattva', title: 'Pañca-tattva mantra'},
+    {id: 'maha-mantra', title: 'Hare Krishna mahā-mantra'},
+    {id: 'caitanya', title: 'Śrī Caitanya praṇāma'},
+    {id: 'krsna', title: 'Śrī Kṛṣṇa praṇāma'},
+    {id: 'radha', title: 'Śrī Rādhā praṇāma'},
+    {id: 'tulasi', title: 'Tulasī praṇāma'},
+    {id: 'narasimha', title: 'Nṛsiṁha praṇāma'},
+    {id: 'offering', title: 'Offering prayer'},
+    {id: 'gurvastakam', title: 'Gurv-aṣṭakam'}
+  ];
+  var AUDIO_SPEEDS = [0.5, 0.75, 1, 1.25];
+  function fmtBytes(n) {
+    n = Math.max(0, +n || 0);
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (Math.round(n / 102.4) / 10) + ' KB';
+    return (Math.round(n / 104857.6) / 10) + ' MB';
+  }
+  function isAudioFile(name, type) {
+    if (type && String(type).indexOf('audio/') === 0) return true;
+    return /\.(mp3|m4a|aac|wav|ogg|oga|flac|opus)$/i.test(name || '');
+  }
+  function fmtClock(sec) {
+    if (!isFinite(sec) || sec < 0) sec = 0;
+    var s = Math.floor(sec), m = Math.floor(s / 60);
+    return m + ':' + pad(s % 60);
+  }
+  return { BEADS: BEADS, dateKey: dateKey, addDays: addDays, daysBetween: daysBetween, weekday: weekday, roundsFromCounter: roundsFromCounter, beadsInRound: beadsInRound, totalRounds: totalRounds, computeCarry: computeCarry, newDay: newDay, blankState: blankState, rollover: rollover, isComplete: isComplete, streak: streak, defaultPlans: defaultPlans, dayType: dayType, toMin: toMin, fmt12: fmt12, blockStatus: blockStatus, nextHoly: nextHoly, seedHistory: seedHistory, validImport: validImport, migrate: migrate, tapBead: tapBead, undoBead: undoBead, paceStats: paceStats, paceMs: paceMs, norm: norm, slowDown: slowDown, curElapsed: curElapsed, eta: eta, fmtDur: fmtDur, holyToday: holyToday, verseIndex: verseIndex, vedabaseUrl: vedabaseUrl, backupDue: backupDue, nextDateOfType: nextDateOfType, gcalLink: gcalLink, buildICS: buildICS, upcomingBlocks: upcomingBlocks, DEFAULT_ALTAR: DEFAULT_ALTAR, mdLine: mdLine, dailySummary: dailySummary, themeFor: themeFor, gitaUrl: gitaUrl, parseBm: parseBm, stats: stats, heat: heat, niceKey: niceKey, kartikBackfill: kartikBackfill, applyKartikBackfill: applyKartikBackfill, applyKartikBackfillV2: applyKartikBackfillV2, expectedTarget: expectedTarget, syncTodayCarry: syncTodayCarry, recordDay: recordDay, sumRounds: sumRounds, monthMarkdown: monthMarkdown, PRAYER_CARDS: PRAYER_CARDS, AUDIO_SPEEDS: AUDIO_SPEEDS, fmtBytes: fmtBytes, isAudioFile: isAudioFile, fmtClock: fmtClock };
 })();
 if (typeof module !== 'undefined') module.exports = SL;
 
@@ -865,9 +902,78 @@ function applyTheme(){
   var meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content=th==='day'?'#f7efe1':th==='oled'?'#000000':'#0b1530';
   var b=$('themeBtn');if(b)b.textContent=(S.settings.theme==='auto'?'Auto · ':'')+({day:'☀️ Day',dusk:'🌆 Dusk',oled:'🌑 OLED'})[th];
 }
+
+/* ---------- v8: on-device prayer audio (IndexedDB only; never uploaded) ---------- */
+var AU_DB='sadhanaJapaAudio.v1', AU_STORE='clips', auUrls={}, auPending=null;
+function auOpen(){return new Promise(function(res,rej){var r=indexedDB.open(AU_DB,1);r.onupgradeneeded=function(){if(!r.result.objectStoreNames.contains(AU_STORE))r.result.createObjectStore(AU_STORE,{keyPath:'id'})};r.onsuccess=function(){res(r.result)};r.onerror=function(){rej(r.error)}})}
+function auTx(mode,fn){return auOpen().then(function(db){return new Promise(function(res,rej){var tx=db.transaction(AU_STORE,mode),st=tx.objectStore(AU_STORE),req=fn(st);if(req){req.onsuccess=function(){res(req.result)};req.onerror=function(){rej(req.error)}}else{tx.oncomplete=function(){res()};tx.onerror=function(){rej(tx.error)}}}).finally(function(){try{db.close()}catch(e){}})})}
+function auGet(id){return auTx('readonly',function(st){return st.get(id)})}
+function auPut(rec){return auTx('readwrite',function(st){return st.put(rec)})}
+function auDel(id){return auTx('readwrite',function(st){return st.delete(id)})}
+function auAll(){return auTx('readonly',function(st){return st.getAll?st.getAll():null}).then(function(all){if(all)return all;return auOpen().then(function(db){return new Promise(function(res,rej){var tx=db.transaction(AU_STORE,'readonly'),st=tx.objectStore(AU_STORE),out=[],c=st.openCursor();c.onsuccess=function(){var cur=c.result;if(cur){out.push(cur.value);cur.continue()}else res(out)};c.onerror=function(){rej(c.error)}}).finally(function(){try{db.close()}catch(e){}})})})}
+function auRevoke(id){if(auUrls[id]){URL.revokeObjectURL(auUrls[id]);delete auUrls[id]}}
+function auSrc(rec){if(!rec||!rec.blob)return '';if(!auUrls[rec.id])auUrls[rec.id]=URL.createObjectURL(rec.blob);return auUrls[rec.id]}
+function auPersist(){try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){})}catch(e){}}
+function auDock(id){return document.querySelector('.audock[data-prayer="'+id+'"]')}
+function auCard(id){return document.querySelector('details[data-prayer="'+id+'"]')}
+function auSetIndicator(id,has){var card=auCard(id);if(!card)return;var sum=card.querySelector('summary'),ind=sum.querySelector('.auind');if(!ind){ind=document.createElement('span');ind.className='auind';ind.setAttribute('aria-hidden','true');sum.appendChild(ind)}ind.textContent=has?' 🔊':''}
+function auSpeeds(cur){return SL.AUDIO_SPEEDS.map(function(sp){return '<button type="button" class="btn s'+(sp===cur?' on':'')+'" data-sp="'+sp+'">'+sp+'×</button>'}).join('')}
+function auEnsureDocks(){
+  (SL.PRAYER_CARDS||[]).forEach(function(p){
+    var card=auCard(p.id);if(!card||card.querySelector('.audock'))return;
+    var d=document.createElement('div');d.className='audock';d.dataset.prayer=p.id;
+    d.innerHTML='<div class="aunone"><button type="button" class="btn s auadd">➕ Add audio</button><div class="small">Saved only on this phone, for listening offline.</div></div>'+
+      '<div class="auhas hide"><div class="auname small"></div><audio preload="metadata" playsinline></audio>'+
+      '<div class="row" style="margin:6px 0 0"><button type="button" class="btn s auplay" aria-label="Play">▶</button><input type="range" class="auseek" min="0" max="1000" value="0" aria-label="Seek"><span class="small autime">0:00</span></div>'+
+      '<div class="row" style="margin:6px 0 0;justify-content:flex-start;flex-wrap:wrap;gap:6px"><button type="button" class="btn s auloop" aria-pressed="false">↻ Loop</button><span class="auspeeds">'+auSpeeds(1)+'</span><button type="button" class="btn s aureplace">Replace</button><button type="button" class="btn s auremove">Remove</button></div></div>';
+    card.appendChild(d);
+    var audio=d.querySelector('audio'),seek=d.querySelector('.auseek'),play=d.querySelector('.auplay'),time=d.querySelector('.autime'),loop=d.querySelector('.auloop');
+    function tick(){var dur=audio.duration;if(isFinite(dur)&&dur>0){seek.value=String(Math.round(1000*audio.currentTime/dur));time.textContent=SL.fmtClock(audio.currentTime)+' / '+SL.fmtClock(dur)}else time.textContent=SL.fmtClock(audio.currentTime)}
+    audio.addEventListener('timeupdate',tick);audio.addEventListener('loadedmetadata',tick);audio.addEventListener('durationchange',tick);
+    audio.addEventListener('play',function(){play.textContent='❚❚';play.setAttribute('aria-label','Pause');play.classList.add('on');document.querySelectorAll('#v-guide audio').forEach(function(o){if(o!==audio)o.pause()})});
+    audio.addEventListener('pause',function(){play.textContent='▶';play.setAttribute('aria-label','Play');play.classList.remove('on')});
+    play.onclick=function(){if(audio.paused)audio.play().catch(function(){toast('Could not play this file')});else audio.pause()};
+    seek.oninput=function(){var dur=audio.duration;if(isFinite(dur)&&dur>0)audio.currentTime=(+seek.value/1000)*dur};
+    loop.onclick=function(){audio.loop=!audio.loop;loop.setAttribute('aria-pressed',audio.loop?'true':'false');loop.classList.toggle('on',audio.loop)};
+    d.querySelector('.auspeeds').onclick=function(e){var b=e.target.closest('[data-sp]');if(!b)return;audio.playbackRate=+b.dataset.sp;d.querySelectorAll('.auspeeds button').forEach(function(x){x.classList.toggle('on',x===b)})};
+    d.querySelector('.auadd').onclick=function(){auPick(p.id)};
+    d.querySelector('.aureplace').onclick=function(){auPick(p.id)};
+    d.querySelector('.auremove').onclick=function(){if(!confirm('Remove the audio from this prayer? The file is only on this phone, so this cannot be undone.'))return;auRemove(p.id)};
+  });
+}
+function auShow(id,rec){
+  var d=auDock(id);if(!d)return;
+  var has=!!(rec&&rec.blob);
+  d.querySelector('.aunone').classList.toggle('hide',has);
+  d.querySelector('.auhas').classList.toggle('hide',!has);
+  auSetIndicator(id,has);
+  if(!has){var a=d.querySelector('audio');if(a){a.pause();a.removeAttribute('src');a.load()}return}
+  d.querySelector('.auname').textContent=(rec.name||'Audio')+' · '+SL.fmtBytes(rec.size||(rec.blob&&rec.blob.size)||0);
+  var audio=d.querySelector('audio'), src=auSrc(rec);
+  if(audio.getAttribute('src')!==src){var keepT=audio.currentTime,keepR=audio.playbackRate,keepL=audio.loop,was= !audio.paused&&audio.getAttribute('src');audio.src=src;audio.playbackRate=keepR||1;audio.loop=!!keepL;d.querySelector('.auloop').classList.toggle('on',audio.loop)}
+}
+function auRefresh(){
+  auEnsureDocks();
+  return auAll().then(function(list){
+    var have={};(list||[]).forEach(function(rec){if(rec&&rec.id){have[rec.id]=rec;auShow(rec.id,rec)}});
+    (SL.PRAYER_CARDS||[]).forEach(function(p){if(!have[p.id])auShow(p.id,null)});
+    var bytes=(list||[]).reduce(function(n,r){return n+(r.size||(r.blob&&r.blob.size)||0)},0),n=(list||[]).length,el=$('auUsage');
+    if(el)el.textContent=n?('This phone is holding '+n+' prayer recording'+(n===1?'':'s')+' ('+SL.fmtBytes(bytes)+').'):'No prayer audio is stored on this phone yet.';
+    if(n)auPersist();
+  }).catch(function(){var el=$('auUsage');if(el)el.textContent='Audio storage is not available in this browser.';});
+}
+function auPick(id){auPending=id;$('auFile').click()}
+function auSave(id,file){
+  if(!SL.isAudioFile(file.name,file.type)){toast('Please choose an audio file (MP3 or M4A is fine)');return}
+  var rec={id:id,name:file.name,type:file.type||'audio/mpeg',size:file.size,added:Date.now(),blob:file};
+  auRevoke(id);
+  auPut(rec).then(function(){auPersist();auShow(id,rec);auRefresh();toast('Audio saved on this phone')}).catch(function(){toast('Could not save the audio on this phone')});
+}
+function auRemove(id){var d=auDock(id),a=d&&d.querySelector('audio');if(a){a.pause();a.removeAttribute('src');a.load()}auRevoke(id);auDel(id).then(function(){auShow(id,null);auRefresh();toast('Audio removed')})}
 function renderGuide(){
   var q=S.anjana||[];
   $('qList').innerHTML=q.map(function(x,i){return '<div class="qa'+(x.done?' done':'')+'"><input type="checkbox" data-q="'+i+'"'+(x.done?' checked':'')+'><span style="flex:1">'+esc(x.text)+'</span><span class="small">'+esc(x.added?nice(x.added):'')+'</span><button type="button" class="btn s" data-qdel="'+i+'">✕</button></div>'}).join('')||'<div class="small" style="margin-top:6px">No questions yet.</div>';
+  auRefresh();
 }
 function copyText(text,okMsg){
   function shown(){$('impText').value=text;toast('Copy failed. The text is in Settings › Backup')}
@@ -1100,6 +1206,7 @@ function bind(){
       '<div class="row" style="justify-content:flex-start;flex-wrap:wrap"><button type="button" class="btn s" data-set="'+(base+4)+'">Ekadashi +4 ('+(base+4)+')</button><button type="button" class="btn s" data-set="8">Sick / travel (8)</button><button type="button" class="btn s" data-set="reset">Back to usual</button></div>',
       function(f){var v=f.dataset.reset?null:intVal(f,'aT',t.target);if(v==null){t.target=base+(t.carry||0);t.override=false;toast('Back to usual target')}else if(v!==t.target){t.target=Math.max(1,v);t.override=true;toast('Today’s target: '+t.target)}save();renderAll()});
     var f=$('dlgForm');delete f.dataset.reset;f.querySelectorAll('[data-set]').forEach(function(b){b.onclick=function(){if(b.dataset.set==='reset'){f.dataset.reset='1';f.querySelector('#aT').value=base+(t.carry||0)}else{delete f.dataset.reset;f.querySelector('#aT').value=b.dataset.set}}})};
+  function auFileChange(){var el=$('auFile'),f=el.files&&el.files[0],id=auPending;el.value='';auPending=null;if(f&&id)auSave(id,f)}$('auFile').addEventListener('change',auFileChange);
   $('qAdd').onclick=function(){var v=$('qNew').value.trim();if(!v)return;S.anjana.push({text:v,done:false,added:S.today.date});$('qNew').value='';save();renderGuide()};
   $('qNew').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();$('qAdd').click()}});
   $('qList').onclick=function(e){var d=e.target.dataset.qdel;if(d!=null){S.anjana.splice(+d,1);save();renderGuide();return}var q=e.target.dataset.q;if(q!=null){S.anjana[+q].done=e.target.checked;save();renderGuide()}};
@@ -1142,7 +1249,7 @@ function bind(){
   setInterval(blockChimeCheck,15000);
   setInterval(function(){checkDay();if(!$('v-japa').classList.contains('hide'))renderNext();if(!$('v-plan').classList.contains('hide'))renderPlan()},20000);
 }
-load();SL.rollover(S,todayKey());SL.syncTodayCarry(S);save();bind();renderAll();scheduleNotifs();
+load();SL.rollover(S,todayKey());SL.syncTodayCarry(S);save();bind();renderAll();scheduleNotifs();auPersist();auEnsureDocks();auRefresh();
 $('pad').addEventListener('pointerdown',function(){if(S.settings.chimeRound||S.settings.chimeBlocks)audio()},{once:true});
 if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
   var bar=document.getElementById('updBar'),reloading=false,asked=false;

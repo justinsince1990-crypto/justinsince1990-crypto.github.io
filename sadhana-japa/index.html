@@ -128,6 +128,7 @@ html[data-theme=oled] img,html[data-theme=oled] .emoji{filter:grayscale(1) sepia
 .heat i.l1{background:var(--gold-bg);opacity:.5}.heat i.l2{background:var(--gold-bg);opacity:.8}.heat i.l3{background:var(--gold-bg)}.heat i.l4{background:var(--gold)}
 .heat i.t{outline:2px solid var(--saf);outline-offset:1px}
 .mantra{font-size:17px;line-height:1.6;color:var(--saf2);margin:6px 0}
+.phon{font-size:14px;line-height:1.55;color:var(--mute);font-style:italic;margin:0 0 8px}
 details.card summary{cursor:pointer;font-weight:600;list-style:none;min-height:28px}
 details.card summary::after{content:' ▾';color:var(--mute)}
 .qa{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
@@ -218,22 +219,39 @@ footer{text-align:center;color:var(--saf2);opacity:.8;margin:22px 0 8px;font-siz
       <div class="row"><input type="text" id="qNew" placeholder="Add a question" style="flex:1"><button class="btn s" id="qAdd" type="button">Add</button></div>
       <div id="qList"></div>
     </div>
-    <details class="card" open><summary>Hare Krishna mahā-mantra</summary>
-      <div class="mantra">Hare Kṛṣṇa Hare Kṛṣṇa<br>Kṛṣṇa Kṛṣṇa Hare Hare<br>Hare Rāma Hare Rāma<br>Rāma Rāma Hare Hare</div>
-      <div class="small">Japa: one full mantra per bead, 108 beads to a round.</div></details>
-    <details class="card"><summary>Pañca-tattva mantra</summary>
+    <details class="card" open><summary>1. Pañca-tattva mantra</summary>
       <div class="mantra">(jaya) śrī-kṛṣṇa-caitanya prabhu nityānanda<br>śrī-advaita gadādhara śrīvāsādi-gaura-bhakta-vṛnda</div>
-      <div class="small">Chanted in the morning before japa.</div></details>
-    <details class="card"><summary>Kṛṣṇa praṇāma mantra</summary>
+      <div class="phon">jay-uh shree-krish-na chai-tan-ya pra-bhoo nit-ya-nan-da<br>shree-ad-vai-ta ga-da-dha-ra shree-va-sa-di gau-ra bhak-ta vrin-da</div>
+      <div class="small">Chant once before beginning rounds. A short address to Śrī Caitanya and His close associates.</div></details>
+    <details class="card"><summary>2. Hare Krishna mahā-mantra</summary>
+      <div class="mantra">Hare Kṛṣṇa Hare Kṛṣṇa<br>Kṛṣṇa Kṛṣṇa Hare Hare<br>Hare Rāma Hare Rāma<br>Rāma Rāma Hare Hare</div>
+      <div class="phon">Ha-ray Krish-na Ha-ray Krish-na<br>Krish-na Krish-na Ha-ray Ha-ray<br>Ha-ray Ra-ma Ha-ray Ra-ma<br>Ra-ma Ra-ma Ha-ray Ha-ray</div>
+      <div class="small">The holy names of Rādhā and Kṛṣṇa. One full mantra per bead, 108 beads to a round.</div></details>
+    <details class="card"><summary>3. Śrīla Prabhupāda praṇāma</summary>
+      <div class="mantra">nama oṁ viṣṇu-pādāya kṛṣṇa-preṣṭhāya bhū-tale<br>śrīmate bhaktivedānta-svāmin iti nāmine</div>
+      <div class="phon">na-ma om vish-nu pa-da-ya krish-na presh-tha-ya bhoo-ta-lay<br>shree-ma-tay bhak-ti-ve-dan-ta sva-min i-ti na-mi-nay</div>
+      <div class="mantra">namas te sārasvate deve gaura-vāṇī-pracāriṇe<br>nirviśeṣa-śūnyavādi-pāścātya-deśa-tāriṇe</div>
+      <div class="phon">na-mas tay sa-ras-va-tay day-vay gau-ra va-nee pra-cha-ri-nay<br>nir-vi-she-sha shoon-ya-va-di pa-shcha-tya day-sha ta-ri-nay</div>
+      <div class="small">A bow to Śrīla Prabhupāda, your teacher in this line, who brought these teachings to the wider world.</div></details>
+    <details class="card"><summary>4. Śrī Kṛṣṇa praṇāma</summary>
       <div class="mantra">he kṛṣṇa karuṇā-sindho dīna-bandho jagat-pate<br>gopeśa gopikā-kānta rādhā-kānta namo ’stu te</div>
-      <div class="small">Said while offering obeisances.</div></details>
+      <div class="phon">hay krish-na ka-ru-na sin-dho dee-na ban-dho ja-gat pa-tay<br>go-pay-sha go-pi-ka kan-ta ra-dha kan-ta na-mo stu tay</div>
+      <div class="small">A bow to Kṛṣṇa, the ocean of kindness, friend of the distressed, and beloved of the gopīs and of Rādhā.</div></details>
+    <details class="card"><summary>5. Śrī Rādhā praṇāma</summary>
+      <div class="mantra">tapta-kāñcana-gaurāṅgi rādhe vṛndāvaneśvari<br>vṛṣabhānu-sute devi praṇamāmi hari-priye</div>
+      <div class="phon">tap-ta kan-cha-na gau-ran-gi ra-dhay vrin-da-va-nay-shva-ri<br>vri-sha-bha-nu su-tay day-vi pra-na-ma-mi ha-ri pri-yay</div>
+      <div class="small">A bow to Śrī Rādhā, shining like molten gold, the queen of Vṛndāvana and Kṛṣṇa’s dearmost.</div></details>
+    <details class="card"><summary>6. Offering prayer</summary>
+      <div class="mantra">namo brahmaṇya-devāya go-brāhmaṇa-hitāya ca<br>jagad-dhitāya kṛṣṇāya govindāya namo namaḥ</div>
+      <div class="phon">na-mo brah-man-ya day-va-ya go-brah-ma-na hi-ta-ya cha<br>ja-gad dhi-ta-ya krish-na-ya go-vin-da-ya na-mo na-mah</div>
+      <div class="small">Used when offering food to Kṛṣṇa, who cares for the cows, the brāhmaṇas, and the whole world. Said after the Prabhupāda praṇāma when offering bhoga.</div></details>
     <details class="card"><summary>Morning altar sequence</summary>
       <ol style="margin:6px 0;padding-left:22px"><li>Wake and shower</li><li>Clean the altar</li><li>Offer obeisances</li><li>Offer water (fresh water cup / ācamana)</li><li>Pañca-tattva mantra and prayers</li><li>Japa: morning rounds</li><li>Bhagavad Gītā study</li></ol>
       <div class="small">Evening: final rounds, offer obeisances, bed at 10:00 PM. The Dāmodara lamp was daily during Kārtik (through Nov 24).</div></details>
     <details class="card"><summary>Om Tat Sat: offering a meal</summary>
       <div style="margin:6px 0">Before eating, place the plate before Kṛṣṇa (or simply hold it with gratitude), offer it with a short prayer, and close with <b>“oṁ tat sat”</b>, dedicating the meal to the Supreme. Then honor it as prasādam.</div>
-      <div class="small">Mark each offered meal on the Japa tab.</div></details>
-    <div class="small" style="margin:8px 4px">From your notes (Altar Sequence, Mantras, Daily Routine). The mantras are the traditional Sanskrit texts. Full texts with phonetics are in Prayers_and_Mantras.pdf in your notes.</div>
+      <div class="small">Mark each offered meal on the Japa tab. The offering prayer above is the verse used at this step.</div></details>
+    <div class="small" style="margin:8px 4px">Sanskrit and phonetics follow your Prayers_and_Mantras.pdf, in that order. The short English lines are original gists in everyday words, not published translations. Altar and meal notes are from your own practice notes.</div>
   </section>
 
   <section id="v-set" class="hide">
